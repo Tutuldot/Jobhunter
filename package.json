@@ -19,6 +19,10 @@
     "@mui/icons-material": "latest",
     "@mui/lab": "^5.0.0-alpha.117",
     "@mui/material": "latest",
+    "@supabase/auth-helpers-nextjs": "^0.7.3",
+    "@supabase/auth-ui-react": "^0.4.2",
+    "@supabase/auth-ui-shared": "^0.1.6",
+    "@supabase/supabase-js": "^2.31.0",
     "@tabler/icons-react": "^2.29.0",
     "@tiptap/extension-highlight": "^2.0.4",
     "@tiptap/extension-link": "^2.0.4",
@@ -40,6 +44,7 @@
     "typescript": "5.0.4"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.194"
+    "@types/lodash": "^4.14.194",
+    "supabase": "^1.82.2"
   }
 }

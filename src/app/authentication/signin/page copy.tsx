@@ -4,6 +4,10 @@ import Link from "next/link";
 import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
 import Logo from "@/app/(DashboardLayout)/layout/shared/logo/Logo";
 import AuthRegister from "../auth/AuthRegister";
+import AuthHelper from "../auth/AuthHelper";
+
+
+
 
 const Register2 = () => (
   <PageContainer title="Register" description="this is Register page">
@@ -88,6 +92,7 @@ const Register2 = () => (
         </Grid>
       </Grid>
     </Box>
+    <AuthHelper></AuthHelper>
   </PageContainer>
 );
 
