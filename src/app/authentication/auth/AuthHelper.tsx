@@ -17,12 +17,14 @@ import { useRouter,redirect } from "next/navigation";
       process.env.NEXT_PUBLIC_SUPABASE_URL,
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
     ); 
+     
     const router = useRouter();
     supabase.auth.onAuthStateChange((event) => {
-      
+      console.log("status: " + event)
       if (event == "SIGNED_IN") {
-        router.replace("/")
+        router.replace("/fdsasfdf")
       }
+      console.log("status: " + event)
     });
 
     return (
