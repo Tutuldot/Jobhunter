@@ -5,18 +5,17 @@ import type { NextRequest } from 'next/server'
 import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
 import { NextResponse } from 'next/server'
 
-export async function middleware(req:NextRequest) {
+export  function middleware(req:NextRequest) {
  // console.log("middleware working")
   const res = NextResponse.next()
   const supabase = createMiddlewareClient({ req, res })
-  await supabase.auth.getSession()
+  const a = supabase.auth.getSession()
  
   //const { error } = await supabase.auth.signOut()
   //const { data: { user } } = await supabase.auth.getUser()
 
   //const { data: { session } } = await supabase.auth.getSession();
 
-  console.log(supabase)
  // request: NextRequest
   //if (request.nextUrl.pathname.startsWith('/about')) {
    // return NextResponse.rewrite(new URL('/tools/coverletter', request.url))

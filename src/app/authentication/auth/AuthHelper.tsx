@@ -22,7 +22,7 @@ import { useRouter,redirect } from "next/navigation";
     supabase.auth.onAuthStateChange((event) => {
       console.log("status: " + event)
       if (event == "SIGNED_IN") {
-        router.replace("/fdsasfdf")
+        router.replace("/")
       }
       console.log("status: " + event)
     });
