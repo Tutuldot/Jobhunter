@@ -19,6 +19,7 @@ import {
    IconCloudDownload, IconTrash
   } from "@tabler/icons-react";
 
+
 const products = [
   {
       id: "1",
@@ -47,7 +48,17 @@ const products = [
 ];
 
 
-const CoverLetter = () => {
+const CoverLetter = async () => {
+   
+    const supabase = createClientComponentClient<Database>();
+    const {
+        data: { user },
+      } = await supabase.auth.getUser()
+
+ 
+      const { data, error } = await supabase.from('coverletter').select()  
+    
+      console.log(data?.length)
   return (
     <PageContainer title="Cover Letter" description="This page is ">
       <DashboardCard title="Cover Letter">
@@ -85,8 +96,10 @@ const CoverLetter = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {products.map((product) => (
-                            <TableRow key={product.name}>
+                       
+
+                        {data?.map((product) => (
+                            <TableRow key={product.id}>
                                
                                 <TableCell>
                                     <Box
@@ -108,7 +121,7 @@ const CoverLetter = () => {
                                     <Chip
                                         sx={{
                                             px: "4px",
-                                            backgroundColor: product.pbg,
+                                            backgroundColor: "green",
                                             color: "#fff",
                                         }}
                                         size="small"

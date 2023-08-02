@@ -50,6 +50,7 @@ export interface Database {
           id: number
           modified_at: string | null
           name: string | null
+          status: string | null
           user_id: string | null
         }
         Insert: {
@@ -58,6 +59,7 @@ export interface Database {
           id?: number
           modified_at?: string | null
           name?: string | null
+          status?: string | null
           user_id?: string | null
         }
         Update: {
@@ -66,6 +68,7 @@ export interface Database {
           id?: number
           modified_at?: string | null
           name?: string | null
+          status?: string | null
           user_id?: string | null
         }
         Relationships: []
