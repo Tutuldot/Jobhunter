@@ -3,7 +3,8 @@ import Link from "next/link";
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
 import BlankCard from '@/app/(DashboardLayout)/components/shared/BlankCard';
-
+import { Database } from "../../../../../types/supabase";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import {
   Typography, Box,
   Table,

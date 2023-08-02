@@ -5,15 +5,14 @@ import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCa
 import { createClientComponentClient, Session } from '@supabase/auth-helpers-nextjs';
 import { Database } from '../../../../../../types/supabase';
 import Editor from 'react-simple-wysiwyg';
-import { useCallback, useEffect, useState } from 'react'
-async function getUser(){
+import { useState } from 'react'
+import { useRouter,redirect } from "next/navigation";
 
-}
 
 export default function AddCoverLetter({ session }: { session: Session | null }) {
   const [html, setHtml] = useState('my <b>HTML</b>')
   const [cname, setCName] = useState<string | null>(null)
-  const [cletter, setCoverletter] = useState<string | null>(null)
+  const router = useRouter();
   
   async function saveCL(){
     console.log("save records")
@@ -27,7 +26,9 @@ export default function AddCoverLetter({ session }: { session: Session | null })
     const { error } = await supabase
       .from('coverletter')
       .insert({ name: cname,  coverletter: html, user_id: user?.id })
-
+    if(!error){
+      router.replace("/tools/coverletter")
+    }
     console.log(error);
   }
 
