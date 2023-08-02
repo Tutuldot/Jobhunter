@@ -4,6 +4,9 @@ import PageContainer from '@/app/(DashboardLayout)/components/container/PageCont
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
 import BlankCard from '@/app/(DashboardLayout)/components/shared/BlankCard';
 
+import { useCallback, useEffect, useState } from 'react';
+import { Database } from '../../../../../../types/supabase';
+import { createClientComponentClient, Session } from '@supabase/auth-helpers-nextjs';
 
 const AddResume = () => {
   return (
@@ -36,7 +39,7 @@ const AddResume = () => {
            <br></br> <br></br> <br></br>
            <Button variant="outlined" color="secondary" type="submit">Save</Button>
        
-  </form>
+       </form>
       </DashboardCard>
     </PageContainer>
   );

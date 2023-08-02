@@ -4,7 +4,7 @@ import Link from "next/link";
 import PageContainer from "@/app/(DashboardLayout)/components/container/PageContainer";
 import Logo from "@/app/(DashboardLayout)/layout/shared/logo/Logo";
 import AuthRegister from "../auth/AuthRegister";
-import AuthHelper from "../auth/AuthHelper";
+import AuthHelper2 from "../auth/AuthHelper2";
 
 
 
@@ -49,7 +49,7 @@ const Register2 = () => (
             <Box display="flex" alignItems="center" justifyContent="center">
               <Logo />
             </Box>
-            <AuthHelper></AuthHelper>
+            <AuthHelper2></AuthHelper2>
           </Card>
         </Grid>
       </Grid>

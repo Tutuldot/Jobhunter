@@ -5,7 +5,9 @@ import { createClient } from "@supabase/supabase-js"; // for supabase's function
 import {  Auth } from "@supabase/auth-ui-react"; // for Auth UI
 import {ThemeSupa} from "@supabase/auth-ui-shared";
 import { useRouter,redirect } from "next/navigation";
-
+import { cookies } from 'next/headers';
+import { Database } from "../../../../types/supabase";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 
 
@@ -13,16 +15,15 @@ import { useRouter,redirect } from "next/navigation";
 
 
   export default function AuthHelper2() {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-    ); 
+
+    const supabase = createClientComponentClient<Database>();
+    
      
     const router = useRouter();
     supabase.auth.onAuthStateChange((event) => {
       console.log("status: " + event)
       if (event == "SIGNED_IN") {
-        router.replace("/")
+        router.replace("/dashboard")
       }
       console.log("status: " + event)
     });

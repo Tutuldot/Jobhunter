@@ -82,15 +82,18 @@ const Profile = () => {
           <ListItemText>My Tasks</ListItemText>
         </MenuItem>
         <Box mt={1} py={1} px={2}>
+          <form action="/auth/signout" method="post">
           <Button
-            href="/authentication/login"
+            type="submit"
             variant="outlined"
             color="primary"
-            component={Link}
+           
             fullWidth
           >
-            Logout
+            Logout 
           </Button>
+          </form>
+          
         </Box>
       </Menu>
     </Box>
