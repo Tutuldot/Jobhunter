@@ -5,6 +5,7 @@ import PageContainer from "@/app/(DashboardLayout)/components/container/PageCont
 import Logo from "@/app/(DashboardLayout)/layout/shared/logo/Logo";
 import AuthRegister from "../auth/AuthRegister";
 import AuthHelper2 from "../auth/AuthHelper2";
+import AuthHelper from "../auth/AuthHelper";
 
 
 

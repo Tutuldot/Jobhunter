@@ -23,7 +23,8 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
     supabase.auth.onAuthStateChange((event) => {
       console.log("status: " + event)
       if (event == "SIGNED_IN") {
-        router.replace("/dashboard")
+        
+        router.replace("/auth/callback")
       }
       console.log("status: " + event)
     });

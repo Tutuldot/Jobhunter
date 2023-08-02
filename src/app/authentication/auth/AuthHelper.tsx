@@ -28,7 +28,7 @@ import { Database } from "../../../../types/supabase";
         providers={["facebook", "linkedin"]}
         view="sign_in"
         showLinks={false}
-        redirectTo="/auth/callback"
+        redirectTo="https://3000-tutuldot-jobhunter-sxusvamb6e5.ws-us102.gitpod.io/auth/callback"
       />
     </div>
     )

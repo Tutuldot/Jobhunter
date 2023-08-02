@@ -45,6 +45,7 @@ export interface Database {
       }
       coverletter: {
         Row: {
+          coverletter: string | null
           created_at: string | null
           id: number
           modified_at: string | null
@@ -52,6 +53,7 @@ export interface Database {
           user_id: string | null
         }
         Insert: {
+          coverletter?: string | null
           created_at?: string | null
           id?: number
           modified_at?: string | null
@@ -59,6 +61,7 @@ export interface Database {
           user_id?: string | null
         }
         Update: {
+          coverletter?: string | null
           created_at?: string | null
           id?: number
           modified_at?: string | null
