@@ -20,34 +20,6 @@ import {
   } from "@tabler/icons-react";
 
 
-const products = [
-  {
-      id: "1",
-      name: "Database Administrator",
-      filelink: "resume.pdf",
-      status: "Active",
-  },
-  {
-      id: "2",
-      name: "Data Analyst",
-      filelink: "resume.pdf",
-      status: "Active",
-  },
-  {
-      id: "3",
-      name: "SQL Developer",
-      filelink: "resume.pdf",
-      status: "Active",
-  },
-  {
-      id: "4",
-      name: "Java Developer",
-      filelink: "resume.pdf",
-      status: "Active",
-  },
-];
-
-
 const CoverLetter = async () => {
    
     const supabase = createClientComponentClient<Database>();
@@ -56,9 +28,8 @@ const CoverLetter = async () => {
       } = await supabase.auth.getUser()
 
  
-      const { data, error } = await supabase.from('coverletter').select()  
+    const { data, error } = await supabase.from('coverletter').select().eq('user_id',user?.id)  
     
-      console.log(data?.length)
   return (
     <PageContainer title="Cover Letter" description="This page is ">
       <DashboardCard title="Cover Letter">
@@ -129,10 +100,10 @@ const CoverLetter = async () => {
                                     ></Chip>
                                 </TableCell>
                                 <TableCell align="right">
-                                <IconButton color="primary" aria-label="Delete">
+                                <IconButton color="primary" aria-label="Delete" href={"/tools/coverletter/delete/"  + product.id.toString()} component={Link}>
                                      <IconTrash />
                                 </IconButton>
-                                <IconButton color="primary" aria-label="Download">
+                                <IconButton color="primary" aria-label="Download" href={"/tools/coverletter/edit/"  + product.id.toString()} component={Link}>
                                      <IconCloudDownload />
                                 </IconButton>
                                 </TableCell>
