@@ -1,5 +1,6 @@
 'use client';
 import Link from "next/link";
+import { useCallback, useEffect, useState } from 'react'
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
 import BlankCard from '@/app/(DashboardLayout)/components/shared/BlankCard';
@@ -21,14 +22,70 @@ import {
 
 
 const CoverLetter = async () => {
-   
+    const [clList, setCllist] = useState(null)
+    const [loading, setLoading] = useState(true)
+    const [cuser, setCUser] = useState(null)
     const supabase = createClientComponentClient<Database>();
-    const {
-        data: { user },
-      } = await supabase.auth.getUser()
+
+    const getCoverletter = useCallback(async () => {
+        try {
+          setLoading(true)
+          const {
+            data: { user },
+          } = await supabase.auth.getUser()
+          let { data, error, status } = await supabase
+            .from('coverletter')
+            .select()
+            .eq('user_id', user?.id)
+            .eq('status','Active')
+
+    
+          if (error && status !== 406) {
+            throw error
+          }
+    
+          if (data) {
+            setCllist(data)
+            setCUser(user)
+          }
+        } catch (error) {
+          alert('Error loading user and coverletter data!')
+        } finally {
+          setLoading(false)
+        }
+      }, [supabase])
+    
+      useEffect(() => {
+        getCoverletter()
+      }, [getCoverletter])
+
+      async function deleteCoverLetter(id:BigInt) {
+        try
+        {
+          setLoading(true)
+          const { error } = await supabase
+        .from('coverletter')
+        .update({ status:"Deleted"})
+        .eq('id', id)
+        .eq('user_id', cuser?.id)
+        if(!error){
+            alert("Cover Letter Deleted.")
+            getCoverletter()
+        }
+
+        }catch (error) {
+          alert('Error deleting coverletter data!')
+        } finally {
+          setLoading(false)
+        }
+      }
+      
+   // const {
+     //   data: { user },
+     // } = await supabase.auth.getUser()
 
  
-    const { data, error } = await supabase.from('coverletter').select().eq('user_id',user?.id)  
+ //   const { data, error } = await supabase.from('coverletter').select().eq('user_id',user?.id)  
     
   return (
     <PageContainer title="Cover Letter" description="This page is ">
@@ -69,7 +126,7 @@ const CoverLetter = async () => {
                     <TableBody>
                        
 
-                        {data?.map((product) => (
+                        {clList?.map((product) => (
                             <TableRow key={product.id}>
                                
                                 <TableCell>
@@ -100,7 +157,9 @@ const CoverLetter = async () => {
                                     ></Chip>
                                 </TableCell>
                                 <TableCell align="right">
-                                <IconButton color="primary" aria-label="Delete" href={"/tools/coverletter/delete/"  + product.id.toString()} component={Link}>
+                                <IconButton color="primary" aria-label="Delete"
+                                onClick={() => deleteCoverLetter( product.id.toString())}
+                                 >
                                      <IconTrash />
                                 </IconButton>
                                 <IconButton color="primary" aria-label="Download" href={"/tools/coverletter/edit/"  + product.id.toString()} component={Link}>

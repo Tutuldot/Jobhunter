@@ -10,7 +10,7 @@ import { useRouter,redirect } from "next/navigation";
 import { useCallback, useEffect, useState } from 'react'
 
 export default function AddCoverLetter({ params }: { params: { id: BigInteger } }) {
-  const [html, setHtml] = useState('my <b>HTML</b>')
+  const [html, setHtml] = useState('')
   const [cname, setCName] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter();
