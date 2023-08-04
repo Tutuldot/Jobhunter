@@ -11,34 +11,40 @@ export interface Database {
     Tables: {
       config: {
         Row: {
-          config: Json | null
           created_at: string | null
           id: number
-          modified_at: string
-          name: string
-          user_id: number
+          modified_at: string | null
+          name: string | null
+          status: number | null
+          user_id: string | null
+          values: Json | null
+          version: number | null
         }
         Insert: {
-          config?: Json | null
           created_at?: string | null
           id?: number
-          modified_at?: string
-          name: string
-          user_id: number
+          modified_at?: string | null
+          name?: string | null
+          status?: number | null
+          user_id?: string | null
+          values?: Json | null
+          version?: number | null
         }
         Update: {
-          config?: Json | null
           created_at?: string | null
           id?: number
-          modified_at?: string
-          name?: string
-          user_id?: number
+          modified_at?: string | null
+          name?: string | null
+          status?: number | null
+          user_id?: string | null
+          values?: Json | null
+          version?: number | null
         }
         Relationships: [
           {
             foreignKeyName: "config_user_id_fkey"
             columns: ["user_id"]
-            referencedRelation: "user_info"
+            referencedRelation: "users"
             referencedColumns: ["id"]
           }
         ]
@@ -71,7 +77,14 @@ export interface Database {
           status?: string | null
           user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "coverletter_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       jobdetails: {
         Row: {
@@ -79,6 +92,7 @@ export interface Database {
           created_at: string | null
           generatedCoverLetter: string | null
           id: number
+          job_header: number | null
           job_id: number | null
           modified_at: string | null
           status: string | null
@@ -88,6 +102,7 @@ export interface Database {
           created_at?: string | null
           generatedCoverLetter?: string | null
           id?: number
+          job_header?: number | null
           job_id?: number | null
           modified_at?: string | null
           status?: string | null
@@ -97,11 +112,18 @@ export interface Database {
           created_at?: string | null
           generatedCoverLetter?: string | null
           id?: number
+          job_header?: number | null
           job_id?: number | null
           modified_at?: string | null
           status?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "jobdetails_job_header_fkey"
+            columns: ["job_header"]
+            referencedRelation: "jobs"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "jobdetails_job_id_fkey"
             columns: ["job_id"]
@@ -125,6 +147,7 @@ export interface Database {
           search_texts: Json | null
           setup_id: number | null
           status: string | null
+          user_id: string | null
         }
         Insert: {
           appliedJobCount?: number | null
@@ -140,6 +163,7 @@ export interface Database {
           search_texts?: Json | null
           setup_id?: number | null
           status?: string | null
+          user_id?: string | null
         }
         Update: {
           appliedJobCount?: number | null
@@ -155,8 +179,16 @@ export interface Database {
           search_texts?: Json | null
           setup_id?: number | null
           status?: string | null
+          user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "jobs_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       jobs_masterlist: {
         Row: {
@@ -203,72 +235,81 @@ export interface Database {
       resume: {
         Row: {
           created_at: string | null
-          filepath: string
+          file: string | null
           id: number
-          name: string
-          user_id: number
+          isdeleted: boolean | null
+          name: string | null
+          path: string | null
+          user_id: string | null
         }
         Insert: {
           created_at?: string | null
-          filepath: string
+          file?: string | null
           id?: number
-          name: string
-          user_id: number
+          isdeleted?: boolean | null
+          name?: string | null
+          path?: string | null
+          user_id?: string | null
         }
         Update: {
           created_at?: string | null
-          filepath?: string
+          file?: string | null
           id?: number
-          name?: string
-          user_id?: number
+          isdeleted?: boolean | null
+          name?: string | null
+          path?: string | null
+          user_id?: string | null
         }
         Relationships: [
           {
             foreignKeyName: "resume_user_id_fkey"
             columns: ["user_id"]
-            referencedRelation: "user_info"
+            referencedRelation: "users"
             referencedColumns: ["id"]
           }
         ]
       }
-      user_info: {
+      users: {
         Row: {
-          active_subscription: boolean | null
-          active_subscription_id: number | null
+          active: boolean | null
+          code: string | null
           created_at: string | null
-          email: string
-          fullname: string
+          email: string | null
+          fullname: string | null
           id: number
-          is_active: boolean | null
-          mobile_no: string | null
-          userid: string
+          last_login: string | null
+          status: string | null
+          subscription: string | null
+          user_id: string | null
         }
         Insert: {
-          active_subscription?: boolean | null
-          active_subscription_id?: number | null
+          active?: boolean | null
+          code?: string | null
           created_at?: string | null
-          email: string
-          fullname: string
+          email?: string | null
+          fullname?: string | null
           id?: number
-          is_active?: boolean | null
-          mobile_no?: string | null
-          userid: string
+          last_login?: string | null
+          status?: string | null
+          subscription?: string | null
+          user_id?: string | null
         }
         Update: {
-          active_subscription?: boolean | null
-          active_subscription_id?: number | null
+          active?: boolean | null
+          code?: string | null
           created_at?: string | null
-          email?: string
-          fullname?: string
+          email?: string | null
+          fullname?: string | null
           id?: number
-          is_active?: boolean | null
-          mobile_no?: string | null
-          userid?: string
+          last_login?: string | null
+          status?: string | null
+          subscription?: string | null
+          user_id?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "user_info_userid_fkey"
-            columns: ["userid"]
+            foreignKeyName: "users_user_id_fkey"
+            columns: ["user_id"]
             referencedRelation: "users"
             referencedColumns: ["id"]
           }
