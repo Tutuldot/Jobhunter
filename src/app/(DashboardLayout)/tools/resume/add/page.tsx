@@ -8,12 +8,12 @@ import {  useState } from 'react';
 import { Database } from '../../../../../../types/supabase';
 import { createClientComponentClient, Session } from '@supabase/auth-helpers-nextjs';
 import { isConstructorDeclaration } from 'typescript';
-
+import { useRouter } from 'next/router';
 const AddResume = () => {
   const [file, setFile] = useState<File[]>([])
-  const [rname, setRName] = useState<String || null>(null)
+  const [cname, setCName] = useState<string | null>(null)
   const supabase = createClientComponentClient<Database>()
- 
+  
   async function  handleSubmit() {
 
     const {data: { user }} = await supabase.auth.getUser()
@@ -34,9 +34,15 @@ const AddResume = () => {
     if(!error){
       const { error } = await supabase
         .from('resume')
-        .insert({ name: cname,  coverletter: html, user_id: user?.id })
+        .insert({ name: cname,  file: filename, user_id: user?.id, path: folderloc})
       if(!error){
-        router.replace("/tools/coverletter")
+        console.log("success save");
+      }else{
+        // delete file if error
+        const { data, error } = await supabase.storage
+        .from("files")
+        .remove([filename]);
+        console.log("created file deleted due to error on saving")
       }
     }
   
@@ -62,7 +68,7 @@ const AddResume = () => {
               required
               variant="outlined"
               color="secondary"
-          
+              onChange={ (e) => {setCName(e.target.value)} }
               sx={{mb: 3}}
               fullWidth
              
