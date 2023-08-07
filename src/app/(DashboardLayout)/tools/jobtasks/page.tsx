@@ -3,7 +3,7 @@
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
 import BlankCard from '@/app/(DashboardLayout)/components/shared/BlankCard';
-
+import Link from "next/link";
 import {
   Typography, Box,
   Table,
@@ -64,7 +64,7 @@ const JobTasks = () => {
     <PageContainer title="Job Tasks" description="This page is ">
       <DashboardCard title="Job Tasks">
 
-      <Button variant="contained" disableElevation color="primary"  target="_blank" href="https://adminmart.com/product/modernize-next-js-admin-dashboard">
+      <Button component={Link} variant="contained" disableElevation color="primary"  target={""}   href={"/tools/jobtasks/add"}>
             Add New
           </Button>
       <Box sx={{ overflow: 'auto', width: { xs: '280px', sm: 'auto' } }}>

@@ -28,7 +28,7 @@ const Resume = async () => {
     const [cuser, setCUser] = useState(null)
     const supabase = createClientComponentClient<Database>();
 
-    const getCoverletter = useCallback(async () => {
+    const getResume = useCallback(async () => {
         try {
           setLoading(true)
           const {
@@ -58,10 +58,10 @@ const Resume = async () => {
       }, [supabase])
     
       useEffect(() => {
-        getCoverletter()
-      }, [getCoverletter])
+        getResume()
+      }, [getResume])
 
-      async function deleteCoverLetter(id:BigInt) {
+      async function deleteResume(id:BigInt) {
         try
         {
           setLoading(true)
@@ -72,7 +72,7 @@ const Resume = async () => {
         .eq('user_id', cuser?.id)
         if(!error){
             alert("resume Deleted.")
-            getCoverletter()
+            getResume()
         }
 
         }catch (error) {
@@ -165,7 +165,7 @@ const Resume = async () => {
                               
                                 <TableCell align="right">
                                 <IconButton color="primary" aria-label="Delete"
-                                onClick={() => deleteCoverLetter( product.id.toString())}
+                                onClick={() => deleteResume( product.id.toString())}
                                  >
                                      <IconTrash />
                                 </IconButton>
