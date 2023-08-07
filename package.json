@@ -19,6 +19,7 @@
     "@mui/icons-material": "latest",
     "@mui/lab": "^5.0.0-alpha.117",
     "@mui/material": "^5.14.3",
+    "@mui/styled-engine-sc": "^5.12.0",
     "@mui/x-date-pickers": "^6.11.0",
     "@supabase/auth-helpers-nextjs": "^0.7.3",
     "@supabase/auth-ui-react": "^0.4.2",
@@ -45,6 +46,7 @@
     "react-dom": "18.2.0",
     "react-helmet-async": "^1.3.0",
     "react-simple-wysiwyg": "^2.2.5",
+    "styled-components": "^5.3.11",
     "typescript": "5.0.4",
     "uuid": "^9.0.0"
   },
