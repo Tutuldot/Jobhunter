@@ -145,6 +145,7 @@ export interface Database {
           name: string
           resume_id: number | null
           search_texts: Json | null
+          send_asap: boolean | null
           setup_id: number | null
           status: string | null
           user_id: string | null
@@ -161,6 +162,7 @@ export interface Database {
           name: string
           resume_id?: number | null
           search_texts?: Json | null
+          send_asap?: boolean | null
           setup_id?: number | null
           status?: string | null
           user_id?: string | null
@@ -177,6 +179,7 @@ export interface Database {
           name?: string
           resume_id?: number | null
           search_texts?: Json | null
+          send_asap?: boolean | null
           setup_id?: number | null
           status?: string | null
           user_id?: string | null

@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 
 import {
-   IconCloudDownload, IconTrash
+    IconTrash,  IconEdit
   } from "@tabler/icons-react";
 
 
@@ -163,7 +163,7 @@ const CoverLetter = async () => {
                                      <IconTrash />
                                 </IconButton>
                                 <IconButton color="primary" aria-label="Download" href={"/tools/coverletter/edit/"  + product.id.toString()} component={Link}>
-                                     <IconCloudDownload />
+                                     <IconEdit/>
                                 </IconButton>
                                 </TableCell>
                             </TableRow>

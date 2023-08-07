@@ -1,9 +1,11 @@
 'use client';
-
+import Link from "next/link";
+import { useCallback, useEffect, useState } from 'react'
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
 import BlankCard from '@/app/(DashboardLayout)/components/shared/BlankCard';
-import Link from "next/link";
+import { Database } from "../../../../../types/supabase";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import {
   Typography, Box,
   Table,
@@ -11,55 +13,80 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Chip,Grid, CardContent,Button
+  Chip,Grid, CardContent,Button, IconButton, 
 } from '@mui/material';
 
-const products = [
-  {
-      id: "1",
-      name: "DB Administrator Hunt",
-      keyword: "Database Administrator",
-      date_created: "7/25/2023 06:00:00AM",
-      status: "In-Progress",
-      pbg: "primary.main",
-      current_count: "30",
-      applied_count: "13",
-  },
-  {
-    id: "2",
-    name: "SQL Dev Hun",
-    keyword: "SQL",
-    date_created: "7/25/2023 06:00:00AM",
-    status: "In-Progress",
-    pbg: "primary.main",
-    current_count: "30",
-    applied_count: "13"
-},
-{
-    id: "3",
-    name: "Web Dev Hunt",
-    keyword: "Web Developer",
-    date_created: "7/25/2023 06:00:00AM",
-    status: "In-Progress",
-    pbg: "primary.main",
-    current_count: "30",
-    applied_count: "13",
-},
-{
-    id: "4",
-    name: "Programmer",
-    keyword: "Programmer",
-    date_created: "7/25/2023 06:00:00AM",
-    status: "In-Progress",
-    pbg: "primary.main",
-    current_count: "30",
-    applied_count: "13",
-},
+import {
+    IconTrash, IconEye, IconEdit
+  } from "@tabler/icons-react";
+
+
+const JobTasks = async () => {
+    const [clList, setCllist] = useState(null)
+    const [loading, setLoading] = useState(true)
+    const [cuser, setCUser] = useState(null)
+    const supabase = createClientComponentClient<Database>();
+
+    const getJobTasks = useCallback(async () => {
+        try {
+          setLoading(true)
+          const {
+            data: { user },
+          } = await supabase.auth.getUser()
+          let { data, error, status } = await supabase
+            .from('jobs')
+            .select()
+            .eq('user_id', user?.id)
+         
+
+    
+          if (error && status !== 406) {
+            throw error
+          }
+    
+          if (data) {
+            setCllist(data)
+            setCUser(user)
+          }
+        } catch (error) {
+          alert('Error loading user and coverletter data!')
+        } finally {
+          setLoading(false)
+        }
+      }, [supabase])
+    
+      useEffect(() => {
+        getJobTasks()
+      }, [getJobTasks])
+
+      async function deactivateJobs(id:BigInt) {
+        try
+        {
+          setLoading(true)
+          const { error } = await supabase
+        .from('jobs')
+        .update({ status:"Deactivated"})
+        .eq('id', id)
+        .eq('user_id', cuser?.id)
+        if(!error){
+            alert("Job Deactivated")
+            getJobTasks()
+        }
+
+        }catch (error) {
+          alert('Error deactivating record!')
+        } finally {
+          setLoading(false)
+        }
+      }
+      
+   // const {
+     //   data: { user },
+     // } = await supabase.auth.getUser()
+
  
-];
-
-
-const JobTasks = () => {
+ //   const { data, error } = await supabase.from('coverletter').select().eq('user_id',user?.id)  
+    
   return (
     <PageContainer title="Job Tasks" description="This page is ">
       <DashboardCard title="Job Tasks">
@@ -77,11 +104,7 @@ const JobTasks = () => {
                 >
                     <TableHead>
                         <TableRow>
-                            <TableCell>
-                                <Typography variant="subtitle2" fontWeight={600}>
-                                    Id
-                                </Typography>
-                            </TableCell>
+                           
                             <TableCell>
                                 <Typography variant="subtitle2" fontWeight={600}>
                                     Name
@@ -89,34 +112,27 @@ const JobTasks = () => {
                             </TableCell>
                             <TableCell>
                                 <Typography variant="subtitle2" fontWeight={600}>
-                                    Date Created
+                                    Status
                                 </Typography>
                             </TableCell>
                             <TableCell>
                                 <Typography variant="subtitle2" fontWeight={600}>
-                                    Status
+                                    Job Metrics
                                 </Typography>
                             </TableCell>
                             <TableCell align="right">
                                 <Typography variant="subtitle2" fontWeight={600}>
-                                    Completion Rate
+                                    Actions
                                 </Typography>
                             </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {products.map((product) => (
-                            <TableRow key={product.name}>
-                                <TableCell>
-                                    <Typography
-                                        sx={{
-                                            fontSize: "15px",
-                                            fontWeight: "500",
-                                        }}
-                                    >
-                                        {product.id}
-                                    </Typography>
-                                </TableCell>
+                       
+
+                        {clList?.map((product) => (
+                            <TableRow key={product.id}>
+                               
                                 <TableCell>
                                     <Box
                                         sx={{
@@ -128,35 +144,51 @@ const JobTasks = () => {
                                             <Typography variant="subtitle2" fontWeight={600}>
                                                 {product.name}
                                             </Typography>
-                                            <Typography
-                                                color="textSecondary"
-                                                sx={{
-                                                    fontSize: "13px",
-                                                }}
-                                            >
-                                                {product.keyword}
-                                            </Typography>
+                                           
                                         </Box>
                                     </Box>
                                 </TableCell>
-                                <TableCell>
-                                    <Typography color="textSecondary" variant="subtitle2" fontWeight={400}>
-                                        {product.date_created}
-                                    </Typography>
-                                </TableCell>
+                                
+                               
                                 <TableCell>
                                     <Chip
                                         sx={{
                                             px: "4px",
-                                            backgroundColor: product.pbg,
+                                            backgroundColor: (product.status == "Active") ? "green" : "Red",
                                             color: "#fff",
                                         }}
                                         size="small"
                                         label={product.status}
                                     ></Chip>
                                 </TableCell>
+
+
+                                <TableCell>
+                                    <Box
+                                        sx={{ display: "flex", alignItems: "center",}}
+                                    >
+                                        <Box>
+                                            <Typography variant="subtitle2" fontWeight={600}>
+                                            {product.appliedJobCount || 0}  / {product.jobCount || 0} ({(((product.appliedJobCount || 0) / (product.jobCount || 1)) * 100).toFixed(0)} %)
+                                            </Typography>
+                                           
+                                        </Box>
+                                    </Box>
+                                </TableCell>
+
                                 <TableCell align="right">
-                                    <Typography variant="h6"> {product.applied_count} / {product.current_count}</Typography>
+                                <IconButton color="primary" aria-label="Delete"
+                                onClick={() => deactivateJobs( product.id.toString())}
+                                 >
+                                     <IconTrash />
+                                </IconButton>
+                                <IconButton color="primary" aria-label="Download" href={"/tools/jobtasks/edit/"  + product.id.toString()} component={Link}>
+                                     <IconEdit />
+                                </IconButton>
+
+                                <IconButton color="primary" aria-label="Download" href={"/tools/jobtasks/view/"  + product.id.toString()} component={Link}>
+                                     <IconEye />
+                                </IconButton>
                                 </TableCell>
                             </TableRow>
                         ))}
