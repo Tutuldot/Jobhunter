@@ -8,12 +8,14 @@ import {  useState } from 'react';
 import { Database } from '../../../../../../types/supabase';
 import { createClientComponentClient, Session } from '@supabase/auth-helpers-nextjs';
 import { isConstructorDeclaration } from 'typescript';
-import { useRouter } from 'next/router';
-const AddResume = () => {
+import { useRouter } from 'next/navigation';
+
+
+export default function AddResume ({ session }: { session: Session | null })  {
   const [file, setFile] = useState<File[]>([])
   const [cname, setCName] = useState<string | null>(null)
   const supabase = createClientComponentClient<Database>()
-  
+  const router = useRouter();
   async function  handleSubmit() {
 
     const {data: { user }} = await supabase.auth.getUser()
@@ -37,6 +39,7 @@ const AddResume = () => {
         .insert({ name: cname,  file: filename, user_id: user?.id, path: folderloc})
       if(!error){
         console.log("success save");
+        router.replace("/tools/resume")
       }else{
         // delete file if error
         const { data, error } = await supabase.storage
@@ -94,4 +97,3 @@ const AddResume = () => {
   );
 };
 
-export default AddResume;
