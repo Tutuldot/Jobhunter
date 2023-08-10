@@ -21,11 +21,11 @@ export default function EditJobTask({ params }: { params: { id: BigInteger } }) 
   const [cl, setCl] = useState<number>(0)
   const [clList, setCllist] = useState(null)
   const [searchStr, setSearchStr] = useState<string | null>(null)
-  const [startTime, setStartTime] = useState<string | null>(null)
+  const [startTime, setStartTime] = useState<string | null>("2023-01-01 08:00:00")
   const router = useRouter();
   const supabase = createClientComponentClient<Database>();
   const [rList, setRlist] = useState(null)
-
+  const [sendAsap, setSendAsap] = useState(false)
   // get job details
 
   const getJobInfo = useCallback(async () => {
@@ -52,7 +52,7 @@ export default function EditJobTask({ params }: { params: { id: BigInteger } }) 
         setCl(data.coverletter_id)
         setStartTime(data.email_sending_schedule)
         setSearchStr(data.keyword)
-
+        setSendAsap(data.send_asap)
         console.log(data.email_sending_schedule)
       }
     } catch (error) {
@@ -150,7 +150,9 @@ export default function EditJobTask({ params }: { params: { id: BigInteger } }) 
   
     const { error } = await supabase
       .from('jobs')
-      .insert({ name: cname || '', user_id: user?.id, resume_id: resume, coverletter_id: cl, keyword: searchStr, email_sending_schedule: startTime, status: "Active" })
+      .update({ name: cname || '', user_id: user?.id, resume_id: resume, coverletter_id: cl, keyword: searchStr, email_sending_schedule: startTime, status: "Active",send_asap: sendAsap })
+      .eq('id', params.id)
+      .eq('user_id', user?.id)
     if(!error){
       router.replace("/tools/jobtasks")
     }
@@ -228,7 +230,9 @@ export default function EditJobTask({ params }: { params: { id: BigInteger } }) 
            />
           <br></br><br></br>
           <InputLabel >Send via email ASAP</InputLabel>
-          <Checkbox  />
+          <Checkbox checked={sendAsap}
+              onChange={() => {setSendAsap(!sendAsap)}}
+          />
           <br></br><br></br>
           <InputLabel >Sending Schedule</InputLabel>
           <LocalizationProvider dateAdapter={AdapterDayjs} >

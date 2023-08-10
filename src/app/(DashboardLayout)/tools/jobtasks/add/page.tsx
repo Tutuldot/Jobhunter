@@ -16,10 +16,11 @@ export default function AddJobTask({ session }: { session: Session | null }) {
   const [cname, setCName] = useState<string | null>(null)
   const [resume, setResume] = useState<number>(0)
   const [cuser, setCUser] = useState(null)
+  const [sendAsap, setSendAsap] = useState(false)
   const [cl, setCl] = useState<number>(0)
   const [clList, setCllist] = useState(null)
   const [searchStr, setSearchStr] = useState<string | null>(null)
-  const [startTime, setStartTime] = useState<string | null>(null)
+  const [startTime, setStartTime] = useState<string | null>("2023-01-01 08:00:00")
   const router = useRouter();
   const supabase = createClientComponentClient<Database>();
   const [rList, setRlist] = useState(null)
@@ -104,7 +105,7 @@ export default function AddJobTask({ session }: { session: Session | null }) {
   
     const { error } = await supabase
       .from('jobs')
-      .insert({ name: cname || '', user_id: user?.id, resume_id: resume, coverletter_id: cl, keyword: searchStr, email_sending_schedule: startTime, status: "Active" })
+      .insert({ name: cname || '', user_id: user?.id, resume_id: resume, coverletter_id: cl, keyword: searchStr, email_sending_schedule: startTime, status: "Active", send_asap: sendAsap })
     if(!error){
       router.replace("/tools/jobtasks")
     }
@@ -182,11 +183,13 @@ export default function AddJobTask({ session }: { session: Session | null }) {
            />
           <br></br><br></br>
           <InputLabel >Send via email ASAP</InputLabel>
-          <Checkbox  />
+          <Checkbox checked={sendAsap}
+              onChange={() => {setSendAsap(!sendAsap)}}
+          />
           <br></br><br></br>
           <InputLabel >Sending Schedule</InputLabel>
           <LocalizationProvider dateAdapter={AdapterDayjs} >
-          <TimePicker label="Select Time" onChange={(value) => {setStartTime(value)}} />
+          <TimePicker defaultValue={startTime}  onChange={(value) => {setStartTime(value)}} />
           </LocalizationProvider>
         
            <br></br> <br></br> <br></br>
