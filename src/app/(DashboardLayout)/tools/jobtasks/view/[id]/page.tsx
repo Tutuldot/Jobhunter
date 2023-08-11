@@ -1,6 +1,7 @@
 'use client';
 import Link from "next/link";
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react';
+import Modal from '@mui/material/Modal';
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
 import BlankCard from '@/app/(DashboardLayout)/components/shared/BlankCard';
@@ -20,6 +21,13 @@ import {
     IconTrash, IconEye, IconEdit
   } from "@tabler/icons-react";
 
+  interface JobDetailsData {
+    Jobname: string;
+    Verified: boolean;
+    Source: string;
+    Source_Site: string;
+    url: string;
+  }
 
   export default function JobTasksView  ({ params }: { params: { id: BigInteger } })  {
     const [clList, setCllist] = useState(null)
@@ -27,8 +35,28 @@ import {
     const [cuser, setCUser] = useState(null)
     const [jdetails, setJDetails] = useState(null)
     const [jdlines, setJDLines] = useState(null)
+    const [pageCount, setPageCount] = useState(0)
+    const [countPerPage, setCountPerPage] = useState(0)
+    const [open, setOpen] = useState(false)
+    const [jobinfo, setJobInfo] = useState<JobDetailsData>({
+        Jobname: '',
+        Verified: false,
+        Source: '',
+        Source_Site: '',
+        url: ''
+      })
     const supabase = createClientComponentClient<Database>();
-
+    const style = {
+        position: 'absolute' as 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        bgcolor: 'background.paper',
+        border: '2px solid #000',
+        boxShadow: 24,
+        p: 4,
+      };
     const getJobTasks = useCallback(async () => {
         try {
           setLoading(true)
@@ -40,9 +68,7 @@ import {
             .select('*,jobdetails(id, created_at, modified_at, generatedCoverLetter, status, job_header, job_id, jobs_masterlist(source,source_site, url,details, jobid, jobname,jobverified,tags))')
             .eq('user_id', user?.id)
             .eq('id',params.id)
-         
 
-    
           if (error && status !== 406) {
             throw error
           }
@@ -88,7 +114,13 @@ import {
             
             console.log('job details')
             console.log(data)
-            data?.map((p) => ( setJDLines(p.jobdetails)))
+            data?.map((p) => {
+                setJDLines(p.jobdetails)
+                setupPaging(p.jobdetails.length)
+                console.log(p.jobdetails.length)
+            })
+
+          
           }
         } catch (error) {
           console.log('Error loading user and job details data!')
@@ -102,6 +134,18 @@ import {
       }, [getJobTasksDetails])
 
       // end of job details
+
+      async function setupPaging(rowCount:Number){
+
+      }
+
+      async function setupModal(jobname: String){
+        setOpen(!open)
+      }
+
+      async function handleClose(){
+        setOpen(!open)
+      }
 
       async function deactivateJobs(id:BigInt) {
         try
@@ -133,6 +177,21 @@ import {
     
   return (
     <PageContainer title="Job Tasks" description="This page is ">
+        <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+        >
+            <Box sx={style}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+                Text in a modal
+            </Typography>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+            </Typography>
+            </Box>
+      </Modal>
        <DashboardCard title="Job Tasks">
 
      
@@ -332,7 +391,8 @@ import {
                            >
                                <IconTrash />
                           </IconButton>
-                          <IconButton color="primary" aria-label="Download" href={"/tools/jobtasks/edit/"  + product.id.toString()} component={Link}>
+                          <IconButton color="primary" aria-label="Download" 
+                          onClick={() => setupModal( product.id.toString())}>
                                <IconEye />
                           </IconButton>
 
