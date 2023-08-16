@@ -5,7 +5,8 @@ import Modal from '@mui/material/Modal';
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
 import BlankCard from '@/app/(DashboardLayout)/components/shared/BlankCard';
-
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
 import { Database } from "../../../../../types/supabase";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import {
@@ -49,7 +50,9 @@ import {
     const [jdetails, setJDetails] = useState(null)
     const [jdlines, setJDLines] = useState(null)
     const [pageCount, setPageCount] = useState(0)
-    const [countPerPage, setCountPerPage] = useState(0)
+    const [dataCount, setDataCount] = useState(0)
+    const [currentPage, setCurrentPage] = useState(1)
+    const [itemsPerPage, setitemsPerPage] = useState(5)
     const [open, setOpen] = useState(false)
     const [jobinfo, setJobInfo] = useState<JobDetailsData>({
         Jobname: '',
@@ -105,8 +108,10 @@ import {
            
             data?.map((p) => {
                 var itemCount = p.jobdetails[0].count
-                paginate(itemCount,1, 2,10)
-                console.log(paginate(itemCount,1, 2,10))
+                var res = paginate(itemCount,1, itemsPerPage,10)
+
+                setPageCount(res.totalPages)
+                console.log("total pages: " + res.totalPages)
                 
                
             })
@@ -123,18 +128,34 @@ import {
       }, [getJobTasks])
 
       // start of retrieval of job details
-      const getJobTasksDetails = useCallback(async () => {
+      const getJobTasksDetails = useCallback(async (evt=1) => {
         try {
           setLoading(true)
           const {
             data: { user },
           } = await supabase.auth.getUser()
-
+          /** 
           let { data, error, status } = await supabase
             .from('jobs')
             .select('*,jobdetails(id, created_at, modified_at, generatedCoverLetter, status, job_header, job_id, jobs_masterlist(source,source_site, url,details, jobid, jobname,jobverified,tags))')
             .eq('user_id', user?.id)
             .eq('id',params.id)
+            .eq('jobdetails.id',1)
+        */
+            console.log("Current Page is: " + evt)
+            let startPage = (evt - 1) * itemsPerPage
+            let endPage = startPage + (itemsPerPage - 1)
+            console.log("start pages: " + startPage + " End Page: " + endPage)
+            let { data, error, status } = await supabase
+            .from('jobdetails')
+            .select('id, created_at, modified_at, generatedCoverLetter, status, job_header, job_id, jobs_masterlist(source,source_site, url,details, jobid, jobname,jobverified,tags),jobs(id,user_id)')
+            .eq('jobs.user_id', user?.id)
+            .eq('jobs.id',params.id)
+            .range(startPage,endPage)
+
+            //console.log(data)
+
+           
            
 
           
@@ -144,19 +165,21 @@ import {
           }
     
           if (data) {
-            setJDetails(data)
             
-          
+            setJDetails(data)
+            setJDLines(data)
+            setDataCount(data.length)
+            /**
             data?.map((p) => {
                 setJDLines(p.jobdetails)
                 setupPaging(p.jobdetails.length)
                
             })
-
+             */
           
           }
         } catch (error) {
-          console.log('Error loading user and job details data!')
+          console.log('Error loading user and job details data! ' +  error)
         } finally {
           setLoading(false)
         }
@@ -168,9 +191,14 @@ import {
 
       // end of job details
 
-      async function setupPaging(rowCount:Number){
+     
 
-      }
+      const handleChange = (event, value) => {
+        setCurrentPage(value)
+        getJobTasksDetails(value)
+    
+        console.log("event: " + value + " set: " + currentPage)
+    };
 
       async function setupModal(jobname: JobDetailsData){
         setOpen(!open)
@@ -413,7 +441,7 @@ import {
 
 <DashboardCard title="Job Items">
 
-     
+<Pagination count={pageCount} defaultPage={1} siblingCount={0} boundaryCount={2} onChange={handleChange} />
 <Box sx={{ overflow: 'auto', width: { xs: '280px', sm: 'auto' } }}>
           <Table
               aria-label="simple table"
@@ -471,7 +499,7 @@ import {
                                                 color: "#fff",
                                             }}
                                             size="small"
-                                            label={product.jobs_masterlist.details.jobTitle}
+                                            label={product.id + ' ' +  product.jobs_masterlist.details.jobTitle}
 
                                             onClick={() => setupModal({
                                                 Jobname: product.jobs_masterlist.details.jobTitle,
