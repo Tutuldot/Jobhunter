@@ -1,5 +1,7 @@
 'use client';
 import Link from "next/link";
+import JobsModal from "../../components/JobsModal";
+import { paginate } from "@/utils/helpers";
 import { useCallback, useEffect, useState } from 'react';
 import Modal from '@mui/material/Modal';
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
@@ -23,25 +25,7 @@ import {
     IconTrash, IconEye, IconEdit
   } from "@tabler/icons-react";
 
-  interface JobDetailsData {
-    Jobname: string;
-    status: string;
-    Verified: boolean;
-    Source: string;
-    Source_Site: string;
-    url: string;
-    responsibilities: string;
-    local: string;
-    region: string;
-    datePosted: string;
-    educationalRequirement: string;
-    email: string;
-    employmentType: string;
-    hourlySalary: string;
-    language: string;
-    workHours: string;
-    qualification: string;
-  }
+import { JobDetailsData } from "@/models/interfaces/JobTask";
 
   export default function JobTasksView  ({ params }: { params: { id: BigInteger } })  {
     const [clList, setCllist] = useState(null)
@@ -74,6 +58,7 @@ import {
         qualification: '',
       })
     const supabase = createClientComponentClient<Database>();
+    // for removal
     const style = {
         position: 'absolute' as 'absolute',
         top: '50%',
@@ -134,14 +119,7 @@ import {
           const {
             data: { user },
           } = await supabase.auth.getUser()
-          /** 
-          let { data, error, status } = await supabase
-            .from('jobs')
-            .select('*,jobdetails(id, created_at, modified_at, generatedCoverLetter, status, job_header, job_id, jobs_masterlist(source,source_site, url,details, jobid, jobname,jobverified,tags))')
-            .eq('user_id', user?.id)
-            .eq('id',params.id)
-            .eq('jobdetails.id',1)
-        */
+        
             console.log("Current Page is: " + evt)
             let startPage = (evt - 1) * itemsPerPage
             let endPage = startPage + (itemsPerPage - 1)
@@ -153,7 +131,7 @@ import {
             .eq('jobs.id',params.id)
             .range(startPage,endPage)
 
-            //console.log(data)
+          
 
            
            
@@ -169,13 +147,7 @@ import {
             setJDetails(data)
             setJDLines(data)
             setDataCount(data.length)
-            /**
-            data?.map((p) => {
-                setJDLines(p.jobdetails)
-                setupPaging(p.jobdetails.length)
-               
-            })
-             */
+           
           
           }
         } catch (error) {
@@ -196,9 +168,7 @@ import {
       const handleChange = (event, value) => {
         setCurrentPage(value)
         getJobTasksDetails(value)
-    
-        console.log("event: " + value + " set: " + currentPage)
-    };
+      };
 
       async function setupModal(jobname: JobDetailsData){
         setOpen(!open)
@@ -215,10 +185,10 @@ import {
         {
           setLoading(true)
           const { error } = await supabase
-        .from('jobs')
-        .update({ status:"Deactivated"})
-        .eq('id', id)
-        .eq('user_id', cuser?.id)
+            .from('jobs')
+            .update({ status:"Deactivated"})
+            .eq('id', id)
+            .eq('user_id', cuser?.id)
         if(!error){
             alert("Job Deactivated")
             getJobTasks()
@@ -231,108 +201,16 @@ import {
         }
       }
       
-   // const {
-     //   data: { user },
-     // } = await supabase.auth.getUser()
-     function paginate(
-        totalItems: number,
-        currentPage: number = 1,
-        pageSize: number = 10,
-        maxPages: number = 10
-    ) {
-        // calculate total pages
-        let totalPages = Math.ceil(totalItems / pageSize);
-    
-        // ensure current page isn't out of range
-        if (currentPage < 1) {
-            currentPage = 1;
-        } else if (currentPage > totalPages) {
-            currentPage = totalPages;
-        }
-    
-        let startPage: number, endPage: number;
-        if (totalPages <= maxPages) {
-            // total pages less than max so show all pages
-            startPage = 1;
-            endPage = totalPages;
-        } else {
-            // total pages more than max so calculate start and end pages
-            let maxPagesBeforeCurrentPage = Math.floor(maxPages / 2);
-            let maxPagesAfterCurrentPage = Math.ceil(maxPages / 2) - 1;
-            if (currentPage <= maxPagesBeforeCurrentPage) {
-                // current page near the start
-                startPage = 1;
-                endPage = maxPages;
-            } else if (currentPage + maxPagesAfterCurrentPage >= totalPages) {
-                // current page near the end
-                startPage = totalPages - maxPages + 1;
-                endPage = totalPages;
-            } else {
-                // current page somewhere in the middle
-                startPage = currentPage - maxPagesBeforeCurrentPage;
-                endPage = currentPage + maxPagesAfterCurrentPage;
-            }
-        }
-    
-        // calculate start and end item indexes
-        let startIndex = (currentPage - 1) * pageSize;
-        let endIndex = Math.min(startIndex + pageSize - 1, totalItems - 1);
-    
-        // create an array of pages to ng-repeat in the pager control
-        let pages = Array.from(Array((endPage + 1) - startPage).keys()).map(i => startPage + i);
-    
-        // return object with all pager properties required by the view
-        return {
-            totalItems: totalItems,
-            currentPage: currentPage,
-            pageSize: pageSize,
-            totalPages: totalPages,
-            startPage: startPage,
-            endPage: endPage,
-            startIndex: startIndex,
-            endIndex: endIndex,
-            pages: pages
-        };
-    }
+ 
+   
  
  //   const { data, error } = await supabase.from('coverletter').select().eq('user_id',user?.id)  
     
   return (
     <PageContainer title="Job Tasks" description="This page is ">
-        <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-        >
-            <Box sx={style}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-                {jobinfo.Jobname}
-            </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              <b>Application Status: </b> {jobinfo.status} <br/>
-              <b>  Hourly Rate:</b> {jobinfo.hourlySalary} <br/> <b>Location:</b> {jobinfo.local}, {jobinfo.region}<br/> <b>Date Posted:</b> {jobinfo.datePosted}
-              <br/>
-              <b>Education Requirement: </b> {jobinfo.educationalRequirement}<br/>
-              <b>Employment Type: </b> {jobinfo.employmentType}
-              <br/>
-              <b>Language: </b> {jobinfo.language}
-              <br/>
-              <b>Work Hours: </b> {jobinfo.workHours}
-              <br/>
-              <b>Work Experience: </b> {jobinfo.qualification}
-              <br/>
-              <b>Source: </b> {jobinfo.Source} <br/>
-              <b>Link: </b> <Link href={jobinfo.Source_Site + jobinfo.url.substring(1)}  target="_blank">Click here to view on Job Bank</Link>
-              <br/><br/>
-              <b>Responsibilities:</b><br/>
-              {jobinfo.responsibilities}
-            </Typography>
-
-           
-            </Box>
-      </Modal>
-       <DashboardCard title="Job Tasks">
+        <JobsModal  open={open} onClose={handleClose} style = {style} jobinfo={jobinfo} />
+        
+      -  <DashboardCard title="Job Tasks">
 
      
 <Box sx={{ overflow: 'auto', width: { xs: '280px', sm: 'auto' } }}>
