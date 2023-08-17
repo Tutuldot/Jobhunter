@@ -1,5 +1,5 @@
 'use client';
-import { Typography, Grid, CardContent,TextField, FormControl, Button  } from '@mui/material';
+import { Typography, Grid, CardContent,TextField, FormControl, Button , Chip } from '@mui/material';
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
 import { createClientComponentClient, Session } from '@supabase/auth-helpers-nextjs';
@@ -53,6 +53,18 @@ export default function AddCoverLetter({ session }: { session: Session | null })
              
            />
             <h4>Letter</h4>
+            <h2>Placeholder</h2>
+            <Chip sx={{px: "4px",backgroundColor: "Green",color: "#fff",}}
+                  size="small"
+                  label="Company Name"></Chip>
+            &nbsp;
+            <Chip sx={{px: "4px",backgroundColor: "Green",color: "#fff",}}
+                  size="small"
+                  label="Job Source"></Chip>
+            &nbsp;
+            <Chip sx={{px: "4px",backgroundColor: "Green",color: "#fff",}}
+                  size="small"
+                  label="Position"></Chip><br/><br/>
             <Editor value={html} onChange={ (e) => { setHtml(e.target.value) }} />
           
            <br></br> <br></br> <br></br>
