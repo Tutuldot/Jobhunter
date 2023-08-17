@@ -175,7 +175,7 @@ import { JobDetailsData } from "@/models/interfaces/JobTask";
         setOpen(!open)
       }
 
-      async function deactivateJobs(id:number) {
+      async function deactivateJobs(id?:BigInt) {
         try
         {
           setLoading(true)
@@ -206,10 +206,108 @@ import { JobDetailsData } from "@/models/interfaces/JobTask";
         <JobsModal  open={open} onClose={handleClose} style = {style} jobinfo={jobinfo} />
         
       -  <DashboardCard title="Job Tasks">
-            <JobHeader clList={clList} deactivateJobs={deactivateJobs} />
+<JobHeader clList={clList} deactivateJobs={deactivateJobs} />
      
+<Box sx={{ overflow: 'auto', width: { xs: '280px', sm: 'auto' } }}>
+          <Table
+              aria-label="simple table"
+              sx={{
+                  whiteSpace: "nowrap",
+                  mt: 2
+              }}
+          >
+              <TableHead>
+                  <TableRow>
+                     
+                      <TableCell>
+                          <Typography variant="subtitle2" fontWeight={600}>
+                              Name
+                          </Typography>
+                      </TableCell>
+                      <TableCell>
+                          <Typography variant="subtitle2" fontWeight={600}>
+                              Status
+                          </Typography>
+                      </TableCell>
+                      <TableCell>
+                          <Typography variant="subtitle2" fontWeight={600}>
+                              Job Metrics
+                          </Typography>
+                      </TableCell>
+                      <TableCell align="right">
+                          <Typography variant="subtitle2" fontWeight={600}>
+                              Actions
+                          </Typography>
+                      </TableCell>
+                  </TableRow>
+              </TableHead>
+              <TableBody>
+                 
 
-        </DashboardCard>
+                  {clList?.map((product) => (
+                      <TableRow key={product.id}>
+                         
+                          <TableCell>
+                              <Box
+                                  sx={{
+                                      display: "flex",
+                                      alignItems: "center",
+                                  }}
+                              >
+                                  <Box>
+                                      <Typography variant="subtitle2" fontWeight={600}>
+                                          {product.name}
+                                      </Typography>
+                                     
+                                  </Box>
+                              </Box>
+                          </TableCell>
+                          
+                         
+                          <TableCell>
+                              <Chip
+                                  sx={{
+                                      px: "4px",
+                                      backgroundColor: (product.status == "Active") ? "green" : "Red",
+                                      color: "#fff",
+                                  }}
+                                  size="small"
+                                  label={product.status}
+                              ></Chip>
+                          </TableCell>
+
+
+                          <TableCell>
+                              <Box
+                                  sx={{ display: "flex", alignItems: "center",}}
+                              >
+                                  <Box>
+                                      <Typography variant="subtitle2" fontWeight={600}>
+                                      {product.appliedJobCount || 0}  / {product.jobCount || 0} ({(((product.appliedJobCount || 0) / (product.jobCount || 1)) * 100).toFixed(0)} %)
+                                      </Typography>
+                                     
+                                  </Box>
+                              </Box>
+                          </TableCell>
+
+                          <TableCell align="right">
+                          <IconButton color="primary" aria-label="Delete"
+                          onClick={() => deactivateJobs( product.id.toString())}
+                           >
+                               <IconTrash />
+                          </IconButton>
+                          <IconButton color="primary" aria-label="Download" href={"/tools/jobtasks/edit/"  + product.id.toString()} component={Link}>
+                               <IconEdit />
+                          </IconButton>
+
+                        
+                          </TableCell>
+                      </TableRow>
+                  ))}
+              </TableBody>
+          </Table>
+      </Box>
+</DashboardCard>
 
 <br/><br/>
 
