@@ -51,7 +51,7 @@ const Menuitems = [
   },
   {
     id: uniqueId(),
-    title: "Job Config",
+    title: "Config",
     icon: IconFileSettings,
     href: "/tools/jobconfig",
   },
