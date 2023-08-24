@@ -2,7 +2,6 @@
 import { Typography, Grid, CardContent,TextField, FormControl, Button } from '@mui/material';
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
-import BlankCard from '@/app/(DashboardLayout)/components/shared/BlankCard';
 import { useState, useCallback, useEffect,  } from 'react';
 import { Database } from '../../../../../types/supabase';
 import { createClientComponentClient, Session  } from "@supabase/auth-helpers-nextjs";
@@ -11,7 +10,41 @@ export default function JobConfig ({ session }: { session: Session | null }) {
 
   const [cuser, setCUser] = useState(null)
   const [cuserinfo, setCuserinfo] = useState<UserDetails | null>(null)
-  const [config, setConfig] = useState<Config | null>(null)
+  const [configValues, setConfigValues] = useState<Values>({
+   SMTP_SERVER: "",
+   SMTP_USERNAME: "",
+   SMTP_PASSWORD: "",
+   SMTP_PORT_TLS: "",
+   SMTP_PORT_SSL: ""
+
+  })
+  const [config, setConfig] = useState<Config>({
+    id: 0,
+    user_id: "",
+    values: {
+      SMTP_SERVER: "",
+      SMTP_USERNAME: "",
+      SMTP_PASSWORD: "",
+      SMTP_PORT_TLS: "",
+      SMTP_PORT_SSL: ""
+    },
+    modified_at: "",
+
+  })
+
+  const [usrform, setUsrform] = useState<UserDetails>({
+   active: false, 
+   code:  '',
+   created_at:  '',
+   email:  '',
+   fullname:  '',
+   id:  0,
+   last_login:  "",
+   status:  "",
+   subscription:  "",
+   user_id:  ""
+
+})
 
   const supabase = createClientComponentClient<Database>();
 
@@ -21,11 +54,24 @@ export default function JobConfig ({ session }: { session: Session | null }) {
 
       switch (name) {
          case 'fullname':
-            setCuserinfo({fullname: value})
+            setUsrform({
+               fullname: value 
+            })
+            break;
          case 'email':
-            setCuserinfo({email: value})
+            setUsrform({
+               email: value 
+            })
+            break;
+         case 'code':
+            setUsrform(
+               {code: value}
+            )
+            break;
+         case "smtp_server":
+            setConfigValues({SMTP_SERVER: value})
          default:
-            console.log("")
+            console.log("na")
        }
 
        console.log(cuserinfo)
@@ -51,14 +97,26 @@ export default function JobConfig ({ session }: { session: Session | null }) {
           console.log("to check")
       
          if (data) {
-            setCuserinfo(data as UserDetails)
+            setUsrform({
+               active: data.active || false, 
+               code: data.code || '',
+               created_at: data.created_at || '',
+               email: data.email || '',
+               fullname: data.fullname || '',
+               id: data.id || 0,
+               last_login: data.last_login || "",
+               status: data.status || "",
+               subscription: data.subscription || "",
+               user_id: data.user_id || ""
+
+            })
             setCUser(user)
            // console.log(data)
             //console.log("name: " + data.fullname)
             
          }
 
-        
+         
          var user_config = await supabase
          .from('config')
          .select('*')
@@ -69,7 +127,7 @@ export default function JobConfig ({ session }: { session: Session | null }) {
          setConfig(user_config.data as Config)
 
          console.log(user_config.data)
-        
+         
 
       } catch (error) {
       alert('Error loading user and config data!')
@@ -99,7 +157,7 @@ export default function JobConfig ({ session }: { session: Session | null }) {
                     sx={{mb: 3}}
                     fullWidth
 
-                    value={cuserinfo?.fullname || ''}
+                    value={usrform?.fullname}
                   
                    
                  />
@@ -114,12 +172,13 @@ export default function JobConfig ({ session }: { session: Session | null }) {
                     type="email"
                     sx={{mb: 3}}
                     fullWidth
-                    value={cuserinfo?.email || ''}
+                    value={usrform?.email}
                    
                  />
                  <TextField 
                     label="User Code"
-                    
+                    name="code"
+                    onChange={handleChange}
                     required
                     variant="outlined"
                     color="secondary"
@@ -127,6 +186,8 @@ export default function JobConfig ({ session }: { session: Session | null }) {
                   
                     fullWidth
                     sx={{mb: 3}}
+
+                    value={usrform?.code}
                  />
                  <Button variant="outlined" color="secondary" type="submit">Save</Button>
              
@@ -139,60 +200,66 @@ export default function JobConfig ({ session }: { session: Session | null }) {
           
                 <TextField 
                     label="SMTP Server"
-                   
+                    name="smtp_server"
                     required
+                    onChange={handleChange}
                     variant="outlined"
                     color="secondary"
                     type="email"
                     sx={{mb: 3}}
                     fullWidth
+                    value = {configValues.SMTP_SERVER}
           
                    
                  />
 
                <TextField 
                     label="Email"
-                   
+                    onChange={handleChange}
+                    name="smtp_username"
                     required
                     variant="outlined"
                     color="secondary"
                     type="email"
                     sx={{mb: 3}}
                     fullWidth
-       
+                    value = {configValues.SMTP_USERNAME}
                    
                  />
                  <TextField 
                     label="Password"
-                    
+                    name="smtp_password"
+                    onChange={handleChange}
                     required
                     variant="outlined"
                     color="secondary"
                     type="password"
-              
+                    value = {configValues.SMTP_PASSWORD}
                     fullWidth
                     sx={{mb: 3}}
                  />
 
                  <TextField 
                     label="SSL Port"
-              
+                    name="smtp_ssl_port"
+                    onChange={handleChange}
                     required
                     variant="outlined"
                     color="secondary"
-                  
+                    value = {configValues.SMTP_PORT_SSL}
                     sx={{mb: 3}}
                     fullWidth
                    
                  />
 
                   <TextField 
-                    label="TTL Port"
-              
+                    label="TLS Port"
+                    name="smtp_tls_port"
+                    onChange={handleChange}
                     required
                     variant="outlined"
                     color="secondary"
-              
+                    value = {configValues.SMTP_PORT_TLS}
                     sx={{mb: 3}}
                     fullWidth
                    
