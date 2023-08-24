@@ -58,7 +58,7 @@ export default function JobConfig ({ session }: { session: Session | null }) {
             
          }
 
-         /**
+        
          var user_config = await supabase
          .from('config')
          .select('*')
@@ -69,7 +69,7 @@ export default function JobConfig ({ session }: { session: Session | null }) {
          setConfig(user_config.data as Config)
 
          console.log(user_config.data)
-          */
+        
 
       } catch (error) {
       alert('Error loading user and config data!')
