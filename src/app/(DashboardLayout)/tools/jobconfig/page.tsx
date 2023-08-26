@@ -70,6 +70,19 @@ export default function JobConfig ({ session }: { session: Session | null }) {
             break;
          case "smtp_server":
             setConfigValues({SMTP_SERVER: value})
+            break;
+         case "smtp_username":
+            setConfigValues({SMTP_USERNAME: value})
+            break;
+         case "smtp_password":
+               setConfigValues({SMTP_PASSWORD: value})
+               break;
+         case "smtp_ssl_port":
+            setConfigValues({SMTP_PORT_SSL: value})
+            break;   
+         case "smtp_tls_port":
+            setConfigValues({SMTP_PORT_TLS: value})
+            break;   
          default:
             console.log("na")
        }
@@ -125,7 +138,7 @@ export default function JobConfig ({ session }: { session: Session | null }) {
          .single()
 
          setConfig(user_config.data as Config)
-
+         setConfigValues(user_config.data?.values as Values)
          console.log(user_config.data)
          
 
@@ -197,7 +210,7 @@ export default function JobConfig ({ session }: { session: Session | null }) {
       <DashboardCard title="SMTP Setup">
         
         <form autoComplete="off" >
-          
+           
                 <TextField 
                     label="SMTP Server"
                     name="smtp_server"
@@ -208,11 +221,11 @@ export default function JobConfig ({ session }: { session: Session | null }) {
                     type="email"
                     sx={{mb: 3}}
                     fullWidth
-                    value = {configValues.SMTP_SERVER}
+                    value = {configValues?.SMTP_SERVER }
           
                    
                  />
-
+ { /**
                <TextField 
                     label="Email"
                     onChange={handleChange}
@@ -223,7 +236,7 @@ export default function JobConfig ({ session }: { session: Session | null }) {
                     type="email"
                     sx={{mb: 3}}
                     fullWidth
-                    value = {configValues.SMTP_USERNAME}
+                    value = {configValues?.SMTP_USERNAME}
                    
                  />
                  <TextField 
@@ -234,7 +247,7 @@ export default function JobConfig ({ session }: { session: Session | null }) {
                     variant="outlined"
                     color="secondary"
                     type="password"
-                    value = {configValues.SMTP_PASSWORD}
+                    value = {configValues?.SMTP_PASSWORD}
                     fullWidth
                     sx={{mb: 3}}
                  />
@@ -246,7 +259,7 @@ export default function JobConfig ({ session }: { session: Session | null }) {
                     required
                     variant="outlined"
                     color="secondary"
-                    value = {configValues.SMTP_PORT_SSL}
+                    value = {configValues?.SMTP_PORT_SSL}
                     sx={{mb: 3}}
                     fullWidth
                    
@@ -259,12 +272,12 @@ export default function JobConfig ({ session }: { session: Session | null }) {
                     required
                     variant="outlined"
                     color="secondary"
-                    value = {configValues.SMTP_PORT_TLS}
+                    value = {configValues?.SMTP_PORT_TLS}
                     sx={{mb: 3}}
                     fullWidth
                    
                  />
-               
+               */}
                  <Button variant="outlined" color="secondary" type="submit">Save</Button>
              
         </form>
