@@ -70,6 +70,15 @@ export default function JobConfig ({ session }: { session: Session | null }) {
        console.log(cuserinfo)
    };
 
+   const handleChangev2 = (e:any) => {
+      const { name, value } = e.target;
+      console.log(name + " : " + value);
+      setConfigValues((prevConfig) => ({
+        ...prevConfig,
+        [name]: value,
+      }));
+    };
+
    const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = evt.target;
       console.log(name + ' ' + value)
@@ -165,9 +174,9 @@ export default function JobConfig ({ session }: { session: Session | null }) {
        
                 <TextField 
                     label="SMTP Server"
-                    name="smtp_server"
+                    name="SMTP_SERVER"
                     required
-                    onChange={handleChange}
+                    onChange={handleChangev2}
                     variant="outlined"
                     color="secondary"
                
@@ -180,8 +189,8 @@ export default function JobConfig ({ session }: { session: Session | null }) {
 
                <TextField 
                     label="Email"
-                    onChange={handleChange}
-                    name="smtp_username"
+                    onChange={handleChangev2}
+                    name="SMTP_USERNAME"
                     required
                     variant="outlined"
                     color="secondary"
