@@ -6,28 +6,23 @@ import { useState, useCallback, useEffect,  } from 'react';
 import { Database } from '../../../../../types/supabase';
 import { createClientComponentClient, Session  } from "@supabase/auth-helpers-nextjs";
 import { UserDetails, Config, Values } from '@/models/interfaces/User';
+import ConfigUserInfoForm from './component/ConfigUserInfo';
 export default function JobConfig ({ session }: { session: Session | null }) {
+  const payload = {
+   SMTP_SERVER: "Enter Server Name",
+   SMTP_USERNAME: "Enter Username",
+   SMTP_PASSWORD: "Enter password",
+   SMTP_PORT_TLS: "Enter TLS Server",
+   SMTP_PORT_SSL: "Enter SSL Server "
 
+  }
   const [cuser, setCUser] = useState(null)
   const [cuserinfo, setCuserinfo] = useState<UserDetails | null>(null)
-  const [configValues, setConfigValues] = useState<Values>({
-   SMTP_SERVER: "",
-   SMTP_USERNAME: "",
-   SMTP_PASSWORD: "",
-   SMTP_PORT_TLS: "",
-   SMTP_PORT_SSL: ""
-
-  })
+  const [configValues, setConfigValues] = useState<Values>(payload)
   const [config, setConfig] = useState<Config>({
     id: 0,
     user_id: "",
-    values: {
-      SMTP_SERVER: "",
-      SMTP_USERNAME: "",
-      SMTP_PASSWORD: "",
-      SMTP_PORT_TLS: "",
-      SMTP_PORT_SSL: ""
-    },
+    values: payload,
     modified_at: "",
 
   })
@@ -48,7 +43,7 @@ export default function JobConfig ({ session }: { session: Session | null }) {
 
   const supabase = createClientComponentClient<Database>();
 
-  const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeUserForm = (evt: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = evt.target;
       console.log(name + ' ' + value)
 
@@ -68,26 +63,29 @@ export default function JobConfig ({ session }: { session: Session | null }) {
                {code: value}
             )
             break;
-         case "smtp_server":
-            setConfigValues({SMTP_SERVER: value})
-            break;
-         case "smtp_username":
-            setConfigValues({SMTP_USERNAME: value})
-            break;
-         case "smtp_password":
-               setConfigValues({SMTP_PASSWORD: value})
-               break;
-         case "smtp_ssl_port":
-            setConfigValues({SMTP_PORT_SSL: value})
-            break;   
-         case "smtp_tls_port":
-            setConfigValues({SMTP_PORT_TLS: value})
-            break;   
          default:
             console.log("na")
        }
 
        console.log(cuserinfo)
+   };
+
+   const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
+      const { name, value } = evt.target;
+      console.log(name + ' ' + value)
+     
+      switch (name) {
+       
+         case "smtp_server":
+            setConfigValues({SMTP_SERVER: value })
+            break;
+            
+      
+         default:
+            console.log("na")
+       }
+       console.log("values: " + configValues.SMTP_SERVER)
+    
    };
 
   const getUserDetails = useCallback(async () => {
@@ -138,8 +136,9 @@ export default function JobConfig ({ session }: { session: Session | null }) {
          .single()
 
          setConfig(user_config.data as Config)
-         setConfigValues(user_config.data?.values as Values)
-         console.log(user_config.data)
+         var configData = (user_config.data?.values as Values) || payload
+         setConfigValues(configData)
+         console.log("values: " + configData + " ---- " + (user_config.data?.values as Values))
          
 
       } catch (error) {
@@ -156,61 +155,14 @@ export default function JobConfig ({ session }: { session: Session | null }) {
   return (
     <PageContainer title="User Configuration" description="">
        <DashboardCard title="User Info">
-        
-        <form autoComplete="off" >
-          
-                <TextField 
-                    label="Full name"
-                    name="fullname"
-                    onChange={handleChange}
-                    required
-                    variant="outlined"
-                    color="secondary"
-                    type="Text"
-                    sx={{mb: 3}}
-                    fullWidth
-
-                    value={usrform?.fullname}
-                  
-                   
-                 />
-              
-                <TextField 
-                    label="Email"
-                    name="email"
-                    onChange={handleChange}
-                    required
-                    variant="outlined"
-                    color="secondary"
-                    type="email"
-                    sx={{mb: 3}}
-                    fullWidth
-                    value={usrform?.email}
-                   
-                 />
-                 <TextField 
-                    label="User Code"
-                    name="code"
-                    onChange={handleChange}
-                    required
-                    variant="outlined"
-                    color="secondary"
-                    type="Text"
-                  
-                    fullWidth
-                    sx={{mb: 3}}
-
-                    value={usrform?.code}
-                 />
-                 <Button variant="outlined" color="secondary" type="submit">Save</Button>
-             
-        </form>
+        <ConfigUserInfoForm handleChange={handleChangeUserForm} usrform={usrform} />
+       
       </DashboardCard>
       <br/><br/><br/>
       <DashboardCard title="SMTP Setup">
         
         <form autoComplete="off" >
-           
+       
                 <TextField 
                     label="SMTP Server"
                     name="smtp_server"
@@ -218,14 +170,14 @@ export default function JobConfig ({ session }: { session: Session | null }) {
                     onChange={handleChange}
                     variant="outlined"
                     color="secondary"
-                    type="email"
+               
                     sx={{mb: 3}}
                     fullWidth
-                    value = {configValues?.SMTP_SERVER }
+                    value = {configValues.SMTP_SERVER }
           
                    
                  />
- { /**
+
                <TextField 
                     label="Email"
                     onChange={handleChange}
@@ -236,9 +188,10 @@ export default function JobConfig ({ session }: { session: Session | null }) {
                     type="email"
                     sx={{mb: 3}}
                     fullWidth
-                    value = {configValues?.SMTP_USERNAME}
+                    value = {configValues.SMTP_USERNAME}
                    
                  />
+                  { /**
                  <TextField 
                     label="Password"
                     name="smtp_password"

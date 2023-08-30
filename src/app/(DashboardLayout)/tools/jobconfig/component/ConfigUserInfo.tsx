@@ -1,125 +1,66 @@
 import React from 'react';
 import Link from "next/link";
 import {
-    Typography, Box,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-    Chip,Grid, CardContent,Button, IconButton, 
+    TextField,Button
   } from '@mui/material';
   
-  import {
-      IconTrash, IconEye, IconEdit
-    } from "@tabler/icons-react";
+import { UserDetails } from '@/models/interfaces/User';
 interface ComponentProps {
-    clList: any;
-    deactivateJobs?: (e:number) => void;
+    usrform: UserDetails;
+    handleChange: (e:any) => void;
  
   }
 
-const ConfigUserInfoForm: React.FC<ComponentProps> = ({clList, deactivateJobs}) => {
+const ConfigUserInfoForm: React.FC<ComponentProps> = ({usrform, handleChange}) => {
     return (
-        <Box sx={{ overflow: 'auto', width: { xs: '280px', sm: 'auto' } }}>
-          <Table
-              aria-label="simple table"
-              sx={{
-                  whiteSpace: "nowrap",
-                  mt: 2
-              }}
-          >
-              <TableHead>
-                  <TableRow>
-                     
-                      <TableCell>
-                          <Typography variant="subtitle2" fontWeight={600}>
-                              Name
-                          </Typography>
-                      </TableCell>
-                      <TableCell>
-                          <Typography variant="subtitle2" fontWeight={600}>
-                              Status
-                          </Typography>
-                      </TableCell>
-                      <TableCell>
-                          <Typography variant="subtitle2" fontWeight={600}>
-                              Job Metrics
-                          </Typography>
-                      </TableCell>
-                      <TableCell align="right">
-                          <Typography variant="subtitle2" fontWeight={600}>
-                              Actions
-                          </Typography>
-                      </TableCell>
-                  </TableRow>
-              </TableHead>
-              <TableBody>
-                 
+        <form autoComplete="off" >
+          
+                <TextField 
+                    label="Full name"
+                    name="fullname"
+                    onChange={handleChange}
+                    required
+                    variant="outlined"
+                    color="secondary"
+                    type="Text"
+                    sx={{mb: 3}}
+                    fullWidth
 
-                  {clList?.map((product) => (
-                      <TableRow key={product.id}>
-                         
-                          <TableCell>
-                              <Box
-                                  sx={{
-                                      display: "flex",
-                                      alignItems: "center",
-                                  }}
-                              >
-                                  <Box>
-                                      <Typography variant="subtitle2" fontWeight={600}>
-                                          {product.name}
-                                      </Typography>
-                                     
-                                  </Box>
-                              </Box>
-                          </TableCell>
-                          
-                         
-                          <TableCell>
-                              <Chip
-                                  sx={{
-                                      px: "4px",
-                                      backgroundColor: (product.status == "Active") ? "green" : "Red",
-                                      color: "#fff",
-                                  }}
-                                  size="small"
-                                  label={product.status}
-                              ></Chip>
-                          </TableCell>
+                    value={usrform?.fullname}
+                  
+                   
+                 />
+              
+                <TextField 
+                    label="Email"
+                    name="email"
+                    onChange={handleChange}
+                    required
+                    variant="outlined"
+                    color="secondary"
+                    type="email"
+                    sx={{mb: 3}}
+                    fullWidth
+                    value={usrform?.email}
+                   
+                 />
+                 <TextField 
+                    label="User Code"
+                    name="code"
+                    onChange={handleChange}
+                    required
+                    variant="outlined"
+                    color="secondary"
+                    type="Text"
+                  
+                    fullWidth
+                    sx={{mb: 3}}
 
-
-                          <TableCell>
-                              <Box
-                                  sx={{ display: "flex", alignItems: "center",}}
-                              >
-                                  <Box>
-                                      <Typography variant="subtitle2" fontWeight={600}>
-                                      {product.appliedJobCount || 0}  / {product.jobCount || 0} ({(((product.appliedJobCount || 0) / (product.jobCount || 1)) * 100).toFixed(0)} %)
-                                      </Typography>
-                                     
-                                  </Box>
-                              </Box>
-                          </TableCell>
-
-                          <TableCell align="right">
-                          <IconButton color="primary" aria-label="Delete"
-                          onClick={() => deactivateJobs?.( product.id)}
-                           >
-                               <IconTrash />
-                          </IconButton>
-                          <IconButton color="primary" aria-label="Download" href={"/tools/jobtasks/edit/"  + product.id.toString()} component={Link}>
-                               <IconEdit />
-                          </IconButton>
-
-                        
-                          </TableCell>
-                      </TableRow>
-                  ))}
-              </TableBody>
-          </Table>
-      </Box>
+                    value={usrform?.code}
+                 />
+                 <Button variant="outlined" color="secondary" type="submit">Save</Button>
+             
+        </form>
     )
 }
 
