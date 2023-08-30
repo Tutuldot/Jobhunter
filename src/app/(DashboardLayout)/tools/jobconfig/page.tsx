@@ -6,7 +6,7 @@ import { useState, useCallback, useEffect,  } from 'react';
 import { Database } from '../../../../../types/supabase';
 import { createClientComponentClient, Session  } from "@supabase/auth-helpers-nextjs";
 import { UserDetails, Config, Values } from '@/models/interfaces/User';
-import ConfigUserInfoForm from './component/ConfigUserInfo';
+import { ConfigUserInfoForm } from './component/ConfigForms';
 export default function JobConfig ({ session }: { session: Session | null }) {
   const payload = {
    SMTP_SERVER: "Enter Server Name",
@@ -77,6 +77,12 @@ export default function JobConfig ({ session }: { session: Session | null }) {
         ...prevConfig,
         [name]: value,
       }));
+    };
+
+    const handleSubmit = (e:any) => {
+      e.preventDefault();
+      // You can do something with the config data here, like sending it to the server
+      console.log(config);
     };
 
    const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
@@ -164,7 +170,7 @@ export default function JobConfig ({ session }: { session: Session | null }) {
   return (
     <PageContainer title="User Configuration" description="">
        <DashboardCard title="User Info">
-        <ConfigUserInfoForm handleChange={handleChangeUserForm} usrform={usrform} />
+        <ConfigUserInfoForm handleChange={handleChangeUserForm} usrform={usrform} handleSubmit={handleSubmit} />
        
       </DashboardCard>
       <br/><br/><br/>

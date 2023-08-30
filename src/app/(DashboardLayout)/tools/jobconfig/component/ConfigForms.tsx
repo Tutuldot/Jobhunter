@@ -8,12 +8,13 @@ import { UserDetails } from '@/models/interfaces/User';
 interface ComponentProps {
     usrform: UserDetails;
     handleChange: (e:any) => void;
+    handleSubmit: (e:any) => void;
  
   }
 
-const ConfigUserInfoForm: React.FC<ComponentProps> = ({usrform, handleChange}) => {
+export const ConfigUserInfoForm: React.FC<ComponentProps> = ({usrform, handleChange, handleSubmit}) => {
     return (
-        <form autoComplete="off" >
+        <form autoComplete="off" onSubmit={handleSubmit}>
           
                 <TextField 
                     label="Full name"
@@ -63,5 +64,3 @@ const ConfigUserInfoForm: React.FC<ComponentProps> = ({usrform, handleChange}) =
         </form>
     )
 }
-
-export default ConfigUserInfoForm
