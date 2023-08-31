@@ -1,7 +1,7 @@
 'use client';
 import Link from "next/link";
 import { useCallback, useEffect, useState } from 'react';
-import { useRouter,redirect } from "next/navigation"; // added for handling router
+import { redirect } from "next/navigation"; // added for handling router
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
 import BlankCard from '@/app/(DashboardLayout)/components/shared/BlankCard';
@@ -21,10 +21,14 @@ import {
     IconTrash,  IconEdit
   } from "@tabler/icons-react";
 
-
+interface QueryResult {
+  message: string;
+  showToast: Boolean;
+  message_type: string;
+}
 
 const CoverLetter = async () => {
-    const router = useRouter()
+
     const [clList, setCllist] = useState(null)
     const [loading, setLoading] = useState(true)
     const [cuser, setCUser] = useState(null)
@@ -68,11 +72,7 @@ const CoverLetter = async () => {
         getCoverletter()
       }, [getCoverletter])
 
-      useEffect(() => {
-        setToastMessage(router.query.message || '')
-        setShowToast(router.query.showToast || false)
-        setToastMessageType(router.query.message_type || "")
-      }, [router.query])
+    
 
       async function deleteCoverLetter(id:BigInt) {
         try
