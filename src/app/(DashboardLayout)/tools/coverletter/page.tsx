@@ -1,6 +1,7 @@
 'use client';
 import Link from "next/link";
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react';
+import { useRouter,redirect } from "next/navigation"; // added for handling router
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
 import BlankCard from '@/app/(DashboardLayout)/components/shared/BlankCard';
@@ -21,10 +22,18 @@ import {
   } from "@tabler/icons-react";
 
 
+
 const CoverLetter = async () => {
+    const router = useRouter()
     const [clList, setCllist] = useState(null)
     const [loading, setLoading] = useState(true)
     const [cuser, setCUser] = useState(null)
+    // for toast
+    const [showToast,setShowToast] = useState(false)
+    const [toastMessage,setToastMessage] = useState("")
+    const [toastMessageType, setToastMessageType] = useState("")
+    //{ showToast: true, message: "New Cover letter Created!", message_type: "success" }
+    // end of toast section
     const supabase = createClientComponentClient<Database>();
 
     const getCoverletter = useCallback(async () => {
@@ -58,6 +67,12 @@ const CoverLetter = async () => {
       useEffect(() => {
         getCoverletter()
       }, [getCoverletter])
+
+      useEffect(() => {
+        setToastMessage(router.query.message || '')
+        setShowToast(router.query.showToast || false)
+        setToastMessageType(router.query.message_type || "")
+      }, [router.query])
 
       async function deleteCoverLetter(id:BigInt) {
         try

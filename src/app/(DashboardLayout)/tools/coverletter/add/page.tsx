@@ -27,7 +27,11 @@ export default function AddCoverLetter({ session }: { session: Session | null })
       .from('resume')
       .insert({ name: cname, user_id: user?.id })
     if(!error){
-      router.replace("/tools/coverletter")
+      // router.replace("/tools/coverletter") // this is the original
+      router.replace({
+        pathname: '/tools/coverletter',
+        query: { showToast: true, message: "New Cover letter Created!", message_type: "success" }
+      })
     }
     console.log(error);
   }
