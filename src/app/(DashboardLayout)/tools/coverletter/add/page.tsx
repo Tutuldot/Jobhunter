@@ -3,7 +3,7 @@ import * as React from 'react';
 import { Typography, Grid, CardContent,TextField,
    FormControl, Button , Chip, Snackbar, IconButton } from '@mui/material';
    import {
-    IconTrash
+    IconTrash, IconCross
   } from "@tabler/icons-react";
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
@@ -47,16 +47,9 @@ export default function AddCoverLetter({ session }: { session: Session | null })
   const action = (
     <React.Fragment>
       <Button color="secondary" size="small" onClick={handleClose}>
-        UNDO
+        Return to List
       </Button>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleClose}
-      >
-        <IconTrash fontSize="small" />
-      </IconButton>
+     
     </React.Fragment>
   );
 
@@ -73,7 +66,8 @@ export default function AddCoverLetter({ session }: { session: Session | null })
       .from('resume')
       .insert({ name: cname, user_id: user?.id })
     if(!error){
-       router.replace("/tools/coverletter") // this is the original
+      setOpen(true)
+       //router.replace("/tools/coverletter") // this is the original
      
     }
     console.log(error);
