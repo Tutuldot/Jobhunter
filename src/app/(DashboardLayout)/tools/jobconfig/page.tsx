@@ -6,7 +6,7 @@ import { useState, useCallback, useEffect,  } from 'react';
 import { Database } from '../../../../../types/supabase';
 import { createClientComponentClient, Session  } from "@supabase/auth-helpers-nextjs";
 import { UserDetails, Config, Values } from '@/models/interfaces/User';
-import { ConfigUserInfoForm } from './component/ConfigForms';
+import { ConfigUserInfoForm, ConfigForm } from './component/ConfigForms';
 export default function JobConfig ({ session }: { session: Session | null }) {
   const payload = {
    SMTP_SERVER: "Enter Server Name",
@@ -43,34 +43,17 @@ export default function JobConfig ({ session }: { session: Session | null }) {
 
   const supabase = createClientComponentClient<Database>();
 
-  const handleChangeUserForm = (evt: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = evt.target;
-      console.log(name + ' ' + value)
 
-      switch (name) {
-         case 'fullname':
-            setUsrform({
-               fullname: value 
-            })
-            break;
-         case 'email':
-            setUsrform({
-               email: value 
-            })
-            break;
-         case 'code':
-            setUsrform(
-               {code: value}
-            )
-            break;
-         default:
-            console.log("na")
-       }
+   const handleChangeUserInfo = (e:any) => {
+      const { name, value } = e.target;
+      console.log(name + " : " + value);
+      setUsrform((prevConfig) => ({
+        ...prevConfig,
+        [name]: value,
+      }));
+    };
 
-       console.log(cuserinfo)
-   };
-
-   const handleChangev2 = (e:any) => {
+   const handleChangeConfig = (e:any) => {
       const { name, value } = e.target;
       console.log(name + " : " + value);
       setConfigValues((prevConfig) => ({
@@ -85,23 +68,7 @@ export default function JobConfig ({ session }: { session: Session | null }) {
       console.log(config);
     };
 
-   const handleChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = evt.target;
-      console.log(name + ' ' + value)
-     
-      switch (name) {
-       
-         case "smtp_server":
-            setConfigValues({SMTP_SERVER: value })
-            break;
-            
-      
-         default:
-            console.log("na")
-       }
-       console.log("values: " + configValues.SMTP_SERVER)
-    
-   };
+   
 
   const getUserDetails = useCallback(async () => {
       try {
@@ -170,85 +137,13 @@ export default function JobConfig ({ session }: { session: Session | null }) {
   return (
     <PageContainer title="User Configuration" description="">
        <DashboardCard title="User Info">
-        <ConfigUserInfoForm handleChange={handleChangeUserForm} usrform={usrform} handleSubmit={handleSubmit} />
+        <ConfigUserInfoForm handleChange={handleChangeUserInfo} usrform={usrform} handleSubmit={handleSubmit} />
        
       </DashboardCard>
       <br/><br/><br/>
       <DashboardCard title="SMTP Setup">
         
-        <form autoComplete="off" >
-       
-                <TextField 
-                    label="SMTP Server"
-                    name="SMTP_SERVER"
-                    required
-                    onChange={handleChangev2}
-                    variant="outlined"
-                    color="secondary"
-               
-                    sx={{mb: 3}}
-                    fullWidth
-                    value = {configValues.SMTP_SERVER }
-          
-                   
-                 />
-
-               <TextField 
-                    label="Email"
-                    onChange={handleChangev2}
-                    name="SMTP_USERNAME"
-                    required
-                    variant="outlined"
-                    color="secondary"
-                    type="email"
-                    sx={{mb: 3}}
-                    fullWidth
-                    value = {configValues.SMTP_USERNAME}
-                   
-                 />
-                  { /**
-                 <TextField 
-                    label="Password"
-                    name="smtp_password"
-                    onChange={handleChange}
-                    required
-                    variant="outlined"
-                    color="secondary"
-                    type="password"
-                    value = {configValues?.SMTP_PASSWORD}
-                    fullWidth
-                    sx={{mb: 3}}
-                 />
-
-                 <TextField 
-                    label="SSL Port"
-                    name="smtp_ssl_port"
-                    onChange={handleChange}
-                    required
-                    variant="outlined"
-                    color="secondary"
-                    value = {configValues?.SMTP_PORT_SSL}
-                    sx={{mb: 3}}
-                    fullWidth
-                   
-                 />
-
-                  <TextField 
-                    label="TLS Port"
-                    name="smtp_tls_port"
-                    onChange={handleChange}
-                    required
-                    variant="outlined"
-                    color="secondary"
-                    value = {configValues?.SMTP_PORT_TLS}
-                    sx={{mb: 3}}
-                    fullWidth
-                   
-                 />
-               */}
-                 <Button variant="outlined" color="secondary" type="submit">Save</Button>
-             
-        </form>
+        <ConfigForm  handleChange={handleChangeConfig} configValues={configValues} handleSubmit={handleSubmit}/>
       </DashboardCard>
     
     </PageContainer>
