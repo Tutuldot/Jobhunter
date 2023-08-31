@@ -87,8 +87,7 @@ export const ConfigForm: React.FC<ConfigComponentPros> = ({configValues, handleC
               sx={{mb: 3}}
               fullWidth
               value = {configValues.SMTP_SERVER }
-
-            
+  
           />
 
         <TextField 
