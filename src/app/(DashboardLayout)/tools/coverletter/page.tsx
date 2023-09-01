@@ -21,11 +21,7 @@ import {
     IconTrash,  IconEdit
   } from "@tabler/icons-react";
 
-interface QueryResult {
-  message: string;
-  showToast: Boolean;
-  message_type: string;
-}
+
 
 const CoverLetter = async () => {
 

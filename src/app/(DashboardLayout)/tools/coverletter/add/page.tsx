@@ -63,8 +63,9 @@ export default function AddCoverLetter({ session }: { session: Session | null })
     } = await supabase.auth.getUser()
   
     const { error } = await supabase
-      .from('resume')
-      .insert({ name: cname, user_id: user?.id })
+    .from('coverletter')
+    .insert({ name: cname,  coverletter: html, user_id: user?.id })
+   
     if(!error){
       setOpen(true)
        //router.replace("/tools/coverletter") // this is the original
