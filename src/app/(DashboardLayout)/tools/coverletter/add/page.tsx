@@ -12,7 +12,7 @@ import { Database } from '../../../../../../types/supabase';
 import Editor from 'react-simple-wysiwyg';
 import { useState } from 'react'
 import { useRouter,redirect } from "next/navigation";
-
+import { ToastFragment } from '../components/CLComponents';
 
 export default function AddCoverLetter({ session }: { session: Session | null }) {
   const [html, setHtml] = useState('my <b>HTML</b>')
@@ -45,12 +45,8 @@ export default function AddCoverLetter({ session }: { session: Session | null })
   };
 
   const action = (
-    <React.Fragment>
-      <Button color="secondary" size="small" onClick={handleClose}>
-        Return to List
-      </Button>
-     
-    </React.Fragment>
+    <ToastFragment handleClose={handleClose} />
+    
   );
 
   async function saveCL(){
