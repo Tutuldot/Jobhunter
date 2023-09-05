@@ -76,7 +76,7 @@ export default function AddCoverLetter({ session }: { session: Session | null })
     <PageContainer title="Create Cover Letter" description="">
       <DashboardCard title="Create Cover Letter">
       <div>
-      <Button onClick={handleClick}>Snack Bar Sample</Button>
+     
       <Snackbar
         open={open}
         autoHideDuration={6000}
@@ -85,8 +85,7 @@ export default function AddCoverLetter({ session }: { session: Session | null })
         action={action}
         anchorOrigin={{ vertical, horizontal }}
       />
-    </div>
-        <form autoComplete="off" >
+      <form autoComplete="off" >
           
           <TextField 
               label="Name"
@@ -121,6 +120,8 @@ export default function AddCoverLetter({ session }: { session: Session | null })
            >Save</Button>
        
        </form>
+    </div>
+        
       </DashboardCard>
     </PageContainer>
   );

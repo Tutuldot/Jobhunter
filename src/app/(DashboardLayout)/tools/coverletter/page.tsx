@@ -21,7 +21,77 @@ import {
     IconTrash,  IconEdit
   } from "@tabler/icons-react";
 
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Dialog from '@mui/material/Dialog';
 
+export interface ConfirmationDialogRawProps {
+  id: string;
+  keepMounted: boolean;
+  value: string;
+  open: boolean;
+  onClose: (value?: string) => void;
+}
+
+
+
+export interface ConfirmationDialogRawProps {
+  id: string;
+  keepMounted: boolean;
+  value: string;
+  open: boolean;
+  onClose: (value?: string) => void;
+}
+
+function ConfirmationDialogRaw(props: ConfirmationDialogRawProps) {
+  const { onClose, value: valueProp, open, ...other } = props;
+  const [value, setValue] = useState(valueProp);
+ 
+
+  useEffect(() => {
+    if (!open) {
+      setValue(valueProp);
+    }
+  }, [valueProp, open]);
+
+  const handleEntering = () => {
+   console.log("rendering")
+  };
+
+  const handleCancel = () => {
+    onClose();
+  };
+
+  const handleOk = () => {
+    onClose(value);
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setValue((event.target as HTMLInputElement).value);
+  };
+
+  return (
+    <Dialog
+      sx={{ '& .MuiDialog-paper': { width: '80%', maxHeight: 435 } }}
+      maxWidth="xs"
+      TransitionProps={{ onEntering: handleEntering }}
+      open={open}
+      {...other}
+    >
+      <DialogTitle>Remove Cover Letter</DialogTitle>
+      <DialogContent dividers>
+        <h1>Are you sure you want to delete this cover letter?</h1>
+      </DialogContent>
+      <DialogActions>
+        <Button autoFocus onClick={handleCancel}>
+          Cancel
+        </Button>
+        <Button onClick={handleOk}>Ok</Button>
+      </DialogActions>
+    </Dialog>
+  );
+}
 
 const CoverLetter = async () => {
 
@@ -35,6 +105,19 @@ const CoverLetter = async () => {
     //{ showToast: true, message: "New Cover letter Created!", message_type: "success" }
     // end of toast section
     const supabase = createClientComponentClient<Database>();
+
+    const [open, setOpen] = useState(false);
+    const [value, setValue] = useState('Dione');
+
+    const handleClickListItem = () => {
+      setOpen(true);
+    };
+
+    const handleClose = () => {
+      setOpen(false);
+
+      
+    };
 
     const getCoverletter = useCallback(async () => {
         try {
@@ -71,6 +154,9 @@ const CoverLetter = async () => {
     
 
       async function deleteCoverLetter(id:BigInt) {
+
+        setOpen(true);
+        /**
         try
         {
           setLoading(true)
@@ -89,6 +175,7 @@ const CoverLetter = async () => {
         } finally {
           setLoading(false)
         }
+         */
       }
       
    // const {
@@ -101,8 +188,8 @@ const CoverLetter = async () => {
   return (
     <PageContainer title="Cover Letter" description="This page is ">
       <DashboardCard title="Cover Letter">
-
-      <Button component={Link} variant="contained" disableElevation color="primary"  target={""}   href={"/tools/coverletter/add"}>
+<div>
+<Button component={Link} variant="contained" disableElevation color="primary"  target={""}   href={"/tools/coverletter/add"}>
             Add New
           </Button>
       <Box sx={{ overflow: 'auto', width: { xs: '280px', sm: 'auto' } }}>
@@ -182,6 +269,26 @@ const CoverLetter = async () => {
                     </TableBody>
                 </Table>
             </Box>
+            <Dialog
+              sx={{ '& .MuiDialog-paper': { width: '80%', maxHeight: 435 } }}
+              maxWidth="xs"
+             
+              open={open}
+              
+            >
+              <DialogTitle>Remove Cover Letter</DialogTitle>
+              <DialogContent dividers>
+                <h1>Are you sure you want to delete this cover letter?</h1>
+              </DialogContent>
+              <DialogActions>
+                <Button autoFocus onClick={handleClose}>
+                  Cancel
+                </Button>
+                <Button onClick={handleClose}>Ok</Button>
+              </DialogActions>
+            </Dialog>
+</div>
+   
       </DashboardCard>
     </PageContainer>
   );

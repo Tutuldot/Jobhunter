@@ -1,11 +1,11 @@
 'use client';
-import { Typography, Grid, CardContent,TextField, FormControl, Button  } from '@mui/material';
+import { TextField, Button, Snackbar  } from '@mui/material';
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
 import { createClientComponentClient, Session } from '@supabase/auth-helpers-nextjs';
 import { Database } from '../../../../../../types/supabase';
 import Editor from 'react-simple-wysiwyg';
-
+import { ToastFragment } from '../../components/CLComponents';
 import { useRouter,redirect } from "next/navigation";
 import { useCallback, useEffect, useState } from 'react'
 
@@ -13,9 +13,15 @@ export default function AddCoverLetter({ params }: { params: { id: BigInteger } 
   const [html, setHtml] = useState('')
   const [cname, setCName] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const [open, setOpen] = useState(false);
   const router = useRouter();
   const supabase = createClientComponentClient<Database>();
-  
+  const [state, setState] = useState<State>({
+
+    vertical: 'top',
+    horizontal: 'center',
+  });
+  const { vertical, horizontal } = state;
   const getCoverletter = useCallback(async () => {
     try {
       setLoading(true)
@@ -65,11 +71,42 @@ export default function AddCoverLetter({ params }: { params: { id: BigInteger } 
     console.log(error);
   }
 
+  const handleClick = () => {
+    setOpen(true);
+  };
+  const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
+
+    console.log("reason: " + reason);
+    if (reason === 'clickaway') {
+      setOpen(false);
+      return;
+    }else{
+      router.replace("/tools/coverletter");
+    }
+   
+    setOpen(false);
+  };
+
+  const action = (
+    <ToastFragment handleClose={handleClose} />
+    
+  );
+
 
 
   return (
     <PageContainer title="Create Cover Letter" description="">
       <DashboardCard title="Create Cover Letter">
+      <div>
+     
+      <Snackbar
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        message="Cover Letter Updated."
+        action={action}
+        anchorOrigin={{ vertical, horizontal }}
+      />
   
         <form autoComplete="off" >
           
@@ -94,6 +131,8 @@ export default function AddCoverLetter({ params }: { params: { id: BigInteger } 
            >Save</Button>
        
        </form>
+      </div>
+    
       </DashboardCard>
     </PageContainer>
   );
