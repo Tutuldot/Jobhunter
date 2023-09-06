@@ -114,6 +114,7 @@ const CoverLetter = async () => {
     };
 
     const handleClose = () => {
+      console.log("modal should close")
       setOpen(false);
 
       
@@ -151,6 +152,11 @@ const CoverLetter = async () => {
         getCoverletter()
       }, [getCoverletter])
 
+      useEffect(() => {
+        
+          setOpen(open);
+        
+      }, [open]);
     
 
       async function deleteCoverLetter(id:BigInt) {
@@ -278,7 +284,7 @@ const CoverLetter = async () => {
             >
               <DialogTitle>Remove Cover Letter</DialogTitle>
               <DialogContent dividers>
-                <h1>Are you sure you want to delete this cover letter?</h1>
+                Are you sure you want to delete this cover letter?
               </DialogContent>
               <DialogActions>
                 <Button autoFocus onClick={handleClose}>
