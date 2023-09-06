@@ -7,7 +7,7 @@ import { Database } from '../../../../../types/supabase';
 import { createClientComponentClient, Session  } from "@supabase/auth-helpers-nextjs";
 import { UserDetails, Config, Values } from '@/models/interfaces/User';
 import { ConfigUserInfoForm, ConfigForm } from './component/ConfigForms';
-export default function JobConfig ({ session }: { session: Session | null }) {
+export default function JobConfig () {
   const payload = {
    SMTP_SERVER: "Enter Server Name",
    SMTP_USERNAME: "Enter Username",

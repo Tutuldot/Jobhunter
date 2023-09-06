@@ -11,7 +11,7 @@ import { isConstructorDeclaration } from 'typescript';
 import { useRouter } from 'next/navigation';
 
 
-export default function AddResume ({ session }: { session: Session | null })  {
+export default function AddResume ()  {
   const [file, setFile] = useState<File[]>([])
   const [cname, setCName] = useState<string | null>(null)
   const supabase = createClientComponentClient<Database>()

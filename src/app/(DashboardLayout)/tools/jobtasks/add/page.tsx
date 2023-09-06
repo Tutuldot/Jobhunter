@@ -17,7 +17,7 @@ type ComboForm = {
   name: string;
 }
 
-export default function AddJobTask({ session }: { session: Session | null }) {
+export default function AddJobTask() {
   const [loading, setLoading] = useState(true)
   const [cname, setCName] = useState<string | null>(null)
   const [resume, setResume] = useState<number>(0)

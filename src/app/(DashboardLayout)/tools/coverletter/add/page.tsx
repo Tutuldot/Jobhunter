@@ -14,7 +14,7 @@ import { useState } from 'react'
 import { useRouter,redirect } from "next/navigation";
 import { ToastFragment } from '../components/CLComponents';
 
-export default function AddCoverLetter({ session }: { session: Session | null }) {
+export default function AddCoverLetter() {
   const [html, setHtml] = useState('my <b>HTML</b>')
   const [cname, setCName] = useState<string | null>(null)
   const router = useRouter();
