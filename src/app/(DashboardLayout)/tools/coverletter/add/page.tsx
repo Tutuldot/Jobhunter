@@ -13,6 +13,10 @@ import Editor from 'react-simple-wysiwyg';
 import { useState } from 'react'
 import { useRouter,redirect } from "next/navigation";
 import { ToastFragment } from '../components/CLComponents';
+import { SnackbarOrigin } from '@mui/material';
+interface State extends SnackbarOrigin {
+
+}
 
 export default function AddCoverLetter() {
   const [html, setHtml] = useState('my <b>HTML</b>')
