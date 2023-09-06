@@ -11,6 +11,12 @@ import { useRouter,redirect } from "next/navigation";
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { TimePicker } from '@mui/x-date-pickers';
+
+type ComboForm = {
+  id: Number;
+  name: string;
+}
+
 export default function AddJobTask({ session }: { session: Session | null }) {
   const [loading, setLoading] = useState(true)
   const [cname, setCName] = useState<string | null>(null)
@@ -18,12 +24,12 @@ export default function AddJobTask({ session }: { session: Session | null }) {
   const [cuser, setCUser] = useState(null)
   const [sendAsap, setSendAsap] = useState(false)
   const [cl, setCl] = useState<number>(0)
-  const [clList, setCllist] = useState(null)
+  const [clList, setCllist] = useState<ComboForm[]>()
   const [searchStr, setSearchStr] = useState<string | null>(null)
   const [startTime, setStartTime] = useState<string | null>("2023-01-01 08:00:00")
   const router = useRouter();
   const supabase = createClientComponentClient<Database>();
-  const [rList, setRlist] = useState(null)
+  const [rList, setRlist] = useState<ComboForm[]>()
   const getCoverletter = useCallback(async () => {
     try {
       setLoading(true)
@@ -32,9 +38,10 @@ export default function AddJobTask({ session }: { session: Session | null }) {
       } = await supabase.auth.getUser()
       let { data, error, status } = await supabase
         .from('coverletter')
-        .select()
+        .select('id,name')
         .eq('user_id', user?.id)
         .eq('status','Active')
+        .returns<ComboForm>()
 
 
       if (error && status !== 406) {
@@ -44,6 +51,7 @@ export default function AddJobTask({ session }: { session: Session | null }) {
       if (data) {
         setCllist(data)
         setCUser(user)
+        console.log("cover letter")
         console.log(data)
       }
     } catch (error) {
@@ -68,10 +76,10 @@ export default function AddJobTask({ session }: { session: Session | null }) {
       } = await supabase.auth.getUser()
       let { data, error, status } = await supabase
         .from('resume')
-        .select()
+        .select('id, name')
         .eq('user_id', user?.id)
         .is('isdeleted',null)
-     
+        .returns<ComboForm>()
 
 
       if (error && status !== 406) {
@@ -81,6 +89,7 @@ export default function AddJobTask({ session }: { session: Session | null }) {
       if (data) {
         setRlist(data)
         setCUser(user)
+        console.log("resume")
         console.log(data)
       }
     } catch (error) {
@@ -142,7 +151,7 @@ export default function AddJobTask({ session }: { session: Session | null }) {
             >
                <MenuItem value={0}>Select Resume</MenuItem>
                {rList?.map((resumeList) => (
-                  <MenuItem value={resumeList.id}>{resumeList.name}</MenuItem>
+                  <MenuItem key={resumeList.id} value={resumeList.id}>{resumeList.name}</MenuItem>
                 ))}
             </Select>
             <br></br> <br></br>
@@ -161,7 +170,7 @@ export default function AddJobTask({ session }: { session: Session | null }) {
             >
                <MenuItem value={0}>Select Cover Letter</MenuItem>
                {clList?.map((covLetter) => (
-                  <MenuItem value={covLetter.id}>{covLetter.name}</MenuItem>
+                  <MenuItem key={covLetter.id} value={covLetter.id}>{covLetter.name}</MenuItem>
                 ))}
             
             </Select>

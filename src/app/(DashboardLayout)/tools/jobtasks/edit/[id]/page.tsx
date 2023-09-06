@@ -189,7 +189,7 @@ export default function EditJobTask({ params }: { params: { id: BigInteger } }) 
             >
                <MenuItem value={0}>Select Resume</MenuItem>
                {rList?.map((resumeList) => (
-                  <MenuItem value={resumeList.id}>{resumeList.name}</MenuItem>
+                  <MenuItem key={resumeList.id} value={resumeList.id}>{resumeList.name}</MenuItem>
                 ))}
             </Select>
             <br></br> <br></br>
@@ -208,7 +208,7 @@ export default function EditJobTask({ params }: { params: { id: BigInteger } }) 
             >
                <MenuItem value={0}>Select Cover Letter</MenuItem>
                {clList?.map((covLetter) => (
-                  <MenuItem value={covLetter.id}>{covLetter.name}</MenuItem>
+                  <MenuItem key={covLetter.id} value={covLetter.id}>{covLetter.name}</MenuItem>
                 ))}
             
             </Select>
