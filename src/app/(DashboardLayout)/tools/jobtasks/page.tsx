@@ -21,7 +21,7 @@ import {
   } from "@tabler/icons-react";
 
 
-const JobTasks = async () => {
+const JobTasks =  () => {
     const [clList, setCllist] = useState(null)
     const [loading, setLoading] = useState(true)
     const [cuser, setCUser] = useState(null)
