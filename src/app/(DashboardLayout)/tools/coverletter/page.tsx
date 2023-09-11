@@ -33,16 +33,9 @@ export default function CoverLetter()  {
     const [clList, setCllist] = useState(null)
     const [loading, setLoading] = useState(true)
     const [cuser, setCUser] = useState(null)
-    // for toast
-    const [showToast,setShowToast] = useState(false)
-    const [toastMessage,setToastMessage] = useState("")
-    const [toastMessageType, setToastMessageType] = useState("")
-    //{ showToast: true, message: "New Cover letter Created!", message_type: "success" }
-    // end of toast section
+    const [idToRemove, setIDToRemove] = useState(0)
     const supabase = createClientComponentClient<Database>();
-   
-
-   
+    
 
     const [open, setOpen] = useState(false);
     const handleClickOpen = () => {
@@ -98,7 +91,10 @@ export default function CoverLetter()  {
        
       }, [getCoverletter])
  
-     
+      async function deleteCoverLetterPrompt(id:number) {
+        setIDToRemove(id)
+        setOpen(true)
+      }
 
       async function deleteCoverLetter(id:BigInt) {
 
@@ -205,7 +201,7 @@ export default function CoverLetter()  {
                                 </TableCell>
                                 <TableCell align="right">
                                 <IconButton color="primary" aria-label="Delete"
-                                onClick={() => deleteCoverLetter( product.id.toString())}
+                                onClick={() => deleteCoverLetterPrompt( product.id.toString())}
                                  >
                                      <IconTrash />
                                 </IconButton>
@@ -229,14 +225,13 @@ export default function CoverLetter()  {
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          Let Google help apps determine location. This means sending anonymous
-          location data to Google, even when no apps are running.
+          Are you sure you want to delete this cover letter?
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose}>Disagree</Button>
+        <Button onClick={handleClose}>No</Button>
         <Button onClick={handleClose} autoFocus>
-          Agree
+          Yes
         </Button>
       </DialogActions>
     </Dialog>
