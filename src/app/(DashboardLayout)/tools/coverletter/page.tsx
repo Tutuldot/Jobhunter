@@ -24,7 +24,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import Dialog from '@mui/material/Dialog';
 import DialogContentText from '@mui/material/DialogContentText';
-
+import { DialogYesNo } from "./components/CLComponents";
 
 
 
@@ -38,6 +38,7 @@ export default function CoverLetter()  {
     
 
     const [open, setOpen] = useState(false);
+
     const handleClickOpen = () => {
       setOpen(true);
     };
@@ -45,14 +46,20 @@ export default function CoverLetter()  {
    
     const handleClose = () => {
       console.log("modal should close")
+      setIDToRemove(0)
       setOpen(false);
 
       
     };
-    const memoizedDialog = useMemo(() => {
-      return          ;
-    }, [open]);
-   
+
+     const handleAgree = () => {
+      if(idToRemove > 0){
+        deleteCoverLetter(idToRemove)
+      }
+      
+      setOpen(false);
+    };
+  
 
     
 
@@ -96,7 +103,7 @@ export default function CoverLetter()  {
         setOpen(true)
       }
 
-      async function deleteCoverLetter(id:BigInt) {
+      async function deleteCoverLetter(id:number) {
 
         
         try
@@ -130,12 +137,10 @@ export default function CoverLetter()  {
   return (
     <PageContainer title="Cover Letter" description="This page is ">
       <DashboardCard title="Cover Letter">
-<div>
-<Button variant="outlined" onClick={handleClickOpen}>
-        Open alert dialog
-      </Button>
-<Button component={Link} variant="contained" disableElevation color="primary"  target={""}   href={"/tools/coverletter/add"}>
-            Add New
+      <div>
+
+          <Button component={Link} variant="contained" disableElevation color="primary"  target={""}   href={"/tools/coverletter/add"}>
+                Add New
           </Button>
       <Box sx={{ overflow: 'auto', width: { xs: '280px', sm: 'auto' } }}>
                 <Table
@@ -214,27 +219,9 @@ export default function CoverLetter()  {
                     </TableBody>
                 </Table>
             </Box>
-            <Dialog
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="alert-dialog-title"
-      aria-describedby="alert-dialog-description"
-    >
-      <DialogTitle id="alert-dialog-title">
-        {"Use Google's location service?"}
-      </DialogTitle>
-      <DialogContent>
-        <DialogContentText id="alert-dialog-description">
-          Are you sure you want to delete this cover letter?
-        </DialogContentText>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose}>No</Button>
-        <Button onClick={handleClose} autoFocus>
-          Yes
-        </Button>
-      </DialogActions>
-    </Dialog>
+            <DialogYesNo open={open} handleClose={handleClose} 
+            handleAgree={handleAgree} header="Delete Cover Letter" message="Are you sure you want to delete this cover letter?"  />
+            
 </div>
    
       </DashboardCard>
