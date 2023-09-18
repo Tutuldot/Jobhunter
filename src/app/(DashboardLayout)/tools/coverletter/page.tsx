@@ -12,21 +12,20 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Chip,Grid, CardContent,Button, IconButton, 
+  Chip,Grid, CardContent,Button, IconButton, Snackbar
 } from '@mui/material';
 
 import {
     IconTrash,  IconEdit
   } from "@tabler/icons-react";
 
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import Dialog from '@mui/material/Dialog';
-import DialogContentText from '@mui/material/DialogContentText';
+  import { useRouter,redirect } from "next/navigation";
 import { DialogYesNo } from "./components/CLComponents";
+import { SnackbarOrigin } from '@mui/material';
 
+interface State extends SnackbarOrigin {
 
+}
 
 export default function CoverLetter()  {
 
@@ -35,12 +34,33 @@ export default function CoverLetter()  {
     const [cuser, setCUser] = useState(null)
     const [idToRemove, setIDToRemove] = useState(0)
     const supabase = createClientComponentClient<Database>();
-    
+    const [messageText, setMessageText] = useState("")
+    const [state, setState] = useState<State>({
 
+      vertical: 'top',
+      horizontal: 'center',
+    });
+    const { vertical, horizontal } = state;
+    const router = useRouter();
     const [open, setOpen] = useState(false);
+    const [snackOpen, setSnackOpen] = useState(false);
 
     const handleClickOpen = () => {
       setOpen(true);
+    };
+     
+    const handleCloseSnack = (event: React.SyntheticEvent | Event, reason?: string) => {
+
+      console.log("reason: " + reason);
+      /**
+      if (reason === 'clickaway') {
+        setSnackOpen(false);
+        return;
+      }else{
+        router.replace("/tools/coverletter");
+      }
+      */
+      setSnackOpen(false);
     };
   
    
@@ -60,8 +80,6 @@ export default function CoverLetter()  {
       setOpen(false);
     };
   
-
-    
 
     const getCoverletter = useCallback(async () => {
         try {
@@ -115,12 +133,17 @@ export default function CoverLetter()  {
         .eq('id', id)
         .eq('user_id', cuser?.id)
         if(!error){
-            alert("Cover Letter Deleted.")
+           // cover letter deleted
+           setMessageText("Cover letter deleted.")
+           setSnackOpen(true)
             getCoverletter()
+            
         }
 
         }catch (error) {
-          alert('Error deleting coverletter data!')
+          //alert('Error deleting coverletter data!')
+          setMessageText("Error on loading data. Please try again later.")
+          setSnackOpen(true)
         } finally {
           setLoading(false)
         }
@@ -138,7 +161,14 @@ export default function CoverLetter()  {
     <PageContainer title="Cover Letter" description="This page is ">
       <DashboardCard title="Cover Letter">
       <div>
-
+          <Snackbar
+            open={snackOpen}
+            autoHideDuration={6000}
+            onClose={handleCloseSnack}
+            message={messageText}
+           
+            anchorOrigin={{ vertical, horizontal }}
+          />
           <Button component={Link} variant="contained" disableElevation color="primary"  target={""}   href={"/tools/coverletter/add"}>
                 Add New
           </Button>

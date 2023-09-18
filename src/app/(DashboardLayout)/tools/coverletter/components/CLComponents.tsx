@@ -43,6 +43,15 @@ export const ToastFragment: React.FC<ToastComponentProps> = ({handleClose}) => {
     )
 }
 
+export const ToastFragmentPlain: React.FC<ToastComponentProps> = ({handleClose}) => {
+  return (
+    <React.Fragment>
+      
+   
+  </React.Fragment>
+  )
+}
+
 // Dialog YesNo
 
 
