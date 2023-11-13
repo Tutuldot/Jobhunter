@@ -1,5 +1,11 @@
 'use client';
 import { saveAs } from 'file-saver';
+import { DialogYesNo } from "@/app/(DashboardLayout)/components/shared/CLComponents";
+import { SnackbarOrigin } from '@mui/material';
+
+interface State extends SnackbarOrigin {
+
+}
 import Link from "next/link";
 import { useCallback, useEffect, useState } from 'react'
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
@@ -14,19 +20,44 @@ import {
   TableCell,
   TableHead,
   TableRow,
-  Chip,Grid, CardContent,Button, IconButton, 
+  Chip,Grid, CardContent,Button, IconButton, Snackbar
 } from '@mui/material';
 
 import {
    IconCloudDownload, IconDownload, IconTrash
   } from "@tabler/icons-react";
 
-
-const Resume = async () => {
+ 
+  export default function  Resume() {
     const [clList, setCllist] = useState(null)
     const [loading, setLoading] = useState(true)
     const [cuser, setCUser] = useState(null)
     const supabase = createClientComponentClient<Database>();
+    const [idToRemove, setIDToRemove] = useState(0)
+    const [open, setOpen] = useState(false);
+    const [messageText, setMessageText] = useState("");
+    const [snackOpen, setSnackOpen] = useState(false);
+    const [state, setState] = useState<State>({
+
+      vertical: 'top',
+      horizontal: 'center',
+    });
+    const { vertical, horizontal } = state;
+
+    const handleCloseSnack = (event: React.SyntheticEvent | Event, reason?: string) => {
+
+      console.log("reason: " + reason);
+      /**
+      if (reason === 'clickaway') {
+        setSnackOpen(false);
+        return;
+      }else{
+        router.replace("/tools/coverletter");
+      }
+      */
+      setSnackOpen(false);
+    };
+  
 
     const getResume = useCallback(async () => {
         try {
@@ -61,7 +92,7 @@ const Resume = async () => {
         getResume()
       }, [getResume])
 
-      async function deleteResume(id:BigInt) {
+      async function deleteResume(id:number) {
         try
         {
           setLoading(true)
@@ -71,7 +102,10 @@ const Resume = async () => {
         .eq('id', id)
         .eq('user_id', cuser?.id)
         if(!error){
-            alert("resume Deleted.")
+            //alert("resume Deleted.")
+              // cover letter deleted
+            setMessageText("Resume deleted.")
+            setSnackOpen(true)
             getResume()
         }
 
@@ -100,6 +134,28 @@ const Resume = async () => {
           setLoading(false)
         }
       }
+
+      const handleClose = () => {
+        console.log("modal should close")
+        setIDToRemove(0)
+        setOpen(false);
+  
+        
+      };
+  
+       const handleAgree = () => {
+        if(idToRemove > 0){
+          deleteResume(idToRemove)
+        }
+        
+        setOpen(false);
+      };
+
+
+      async function deleteResumePrompt(id:number) {
+        setIDToRemove(id)
+        setOpen(true)
+      }
       
    // const {
      //   data: { user },
@@ -111,7 +167,14 @@ const Resume = async () => {
   return (
     <PageContainer title="Resume" description="List of resume">
       <DashboardCard title="Resume">
-
+      <Snackbar
+            open={snackOpen}
+            autoHideDuration={6000}
+            onClose={handleCloseSnack}
+            message={messageText}
+           
+            anchorOrigin={{ vertical, horizontal }}
+          />
       <Button component={Link} variant="contained" disableElevation color="primary"  target={""}   href={"/tools/resume/add"}>
             Add New
           </Button>
@@ -165,7 +228,7 @@ const Resume = async () => {
                               
                                 <TableCell align="right">
                                 <IconButton color="primary" aria-label="Delete"
-                                onClick={() => deleteResume( product.id.toString())}
+                                onClick={() => deleteResumePrompt( product.id.toString())}
                                  >
                                      <IconTrash />
                                 </IconButton>
@@ -183,9 +246,12 @@ const Resume = async () => {
                     </TableBody>
                 </Table>
             </Box>
+            <DialogYesNo open={open} handleClose={handleClose} 
+            handleAgree={handleAgree} header="Delete Cover Letter" message="Are you sure you want to delete this resume?"  />
+
+
       </DashboardCard>
     </PageContainer>
   );
 };
 
-export default Resume;
