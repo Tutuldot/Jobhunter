@@ -1,5 +1,5 @@
 'use client';
-import { TextField, Button, Snackbar  } from '@mui/material';
+import { TextField, Button, Snackbar,Chip } from '@mui/material';
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
 import { createClientComponentClient, Session } from '@supabase/auth-helpers-nextjs';
@@ -71,6 +71,21 @@ export default function AddCoverLetter({ params }: { params: { id: BigInteger } 
     console.log(error);
   }
 
+  const handleAddCompanyPlaceHolder = () => {
+    setHtml(html + "[COMPANY_NAME]");
+    console.log("add compant placeholder");
+  };
+
+  const handleAddJobTitle = () => {
+    setHtml(html + "[JOB_TITLE]");
+    console.log("add job title");
+  };
+
+  const handleAddJobSource = () => {
+    setHtml(html + "[JOB_SOURCE]");
+    console.log("add job source")
+  };
+
   const handleClick = () => {
     setOpen(true);
   };
@@ -123,6 +138,17 @@ export default function AddCoverLetter({ params }: { params: { id: BigInteger } 
              
            />
             <h4>Letter</h4>
+            <Chip sx={{px: "4px",backgroundColor: "Green",color: "#fff",}}
+                  size="small"
+                  label="Company Name" clickable color="primary" onClick={handleAddCompanyPlaceHolder}></Chip>
+            &nbsp;
+            <Chip sx={{px: "4px",backgroundColor: "Green",color: "#fff",}}
+                  size="small"
+                  label="Job Source" clickable color="primary" onClick={handleAddJobSource}></Chip>
+            &nbsp;
+            <Chip sx={{px: "4px",backgroundColor: "Green",color: "#fff",}}
+                  size="small"
+                  label="Position" clickable color="primary" onClick={handleAddJobTitle}></Chip><br/><br/>
             <Editor value={html} onChange={ (e) => { setHtml(e.target.value) }} />
           
            <br></br> <br></br> <br></br>

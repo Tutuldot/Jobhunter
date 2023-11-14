@@ -35,6 +35,21 @@ export default function AddCoverLetter() {
     setOpen(true);
   };
 
+  const handleAddCompanyPlaceHolder = () => {
+    setHtml(html + "[COMPANY_NAME]");
+    console.log("add compant placeholder");
+  };
+
+  const handleAddJobTitle = () => {
+    setHtml(html + "[JOB_TITLE]");
+    console.log("add job title");
+  };
+
+  const handleAddJobSource = () => {
+    setHtml(html + "[JOB_SOURCE]");
+    console.log("add job source")
+  };
+
   const handleClose = (event: React.SyntheticEvent | Event, reason?: string) => {
 
     console.log("reason: " + reason);
@@ -107,15 +122,15 @@ export default function AddCoverLetter() {
             <h2>Placeholder</h2>
             <Chip sx={{px: "4px",backgroundColor: "Green",color: "#fff",}}
                   size="small"
-                  label="Company Name"></Chip>
+                  label="Company Name" clickable color="primary" onClick={handleAddCompanyPlaceHolder}></Chip>
             &nbsp;
             <Chip sx={{px: "4px",backgroundColor: "Green",color: "#fff",}}
                   size="small"
-                  label="Job Source"></Chip>
+                  label="Job Source" clickable color="primary" onClick={handleAddJobSource}></Chip>
             &nbsp;
             <Chip sx={{px: "4px",backgroundColor: "Green",color: "#fff",}}
                   size="small"
-                  label="Position"></Chip><br/><br/>
+                  label="Position" clickable color="primary" onClick={handleAddJobTitle}></Chip><br/><br/>
             <Editor value={html} onChange={ (e) => { setHtml(e.target.value) }} />
           
            <br></br> <br></br> <br></br>
