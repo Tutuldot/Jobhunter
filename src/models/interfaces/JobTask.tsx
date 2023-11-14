@@ -1,3 +1,10 @@
+type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 export interface JobDetailsData {
     Jobname: string | null;
     status: string | null;
@@ -75,3 +82,45 @@ export interface JobDetailsData {
       user_id: string | null;
     };
   };
+
+
+
+  export interface CLData {
+    coverletter: string | null;
+    created_at: string | null;
+    id: number;
+    modified_at: string | null;
+    name: string | null;
+    status: string | null;
+    user_id: string | null;
+  }
+
+
+export interface RData {
+    created_at: string | null;
+    file: string | null;
+    id: number;
+    isdeleted: boolean | null;
+    name: string | null;
+    path: string | null;
+    user_id: string | null;
+};
+
+
+export interface Jobs {
+  appliedJobCount: number | null;
+  coverletter_id: number | null;
+  created_at: string | null;
+  email_sending_schedule: string | null;
+  id: number;
+  jobCount: number | null;
+  keyword: string | null;
+  modified_at: string | null;
+  name: string;
+  resume_id: number | null;
+  search_texts: Json | null;
+  send_asap: boolean | null;
+  setup_id: number | null;
+  status: string | null;
+  user_id: string | null;
+}

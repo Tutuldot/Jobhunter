@@ -2,9 +2,9 @@
 import { Checkbox,TextField, MenuItem, Button, InputLabel, Select  } from '@mui/material';
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
-import { createClientComponentClient, Session } from '@supabase/auth-helpers-nextjs';
+import { createClientComponentClient, Session, User } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/app/(DashboardLayout)/components/types/supabase';
-
+import { CLData, RData } from '@/models/interfaces/JobTask';
 import { useState, useCallback, useEffect } from 'react'
 import { useRouter,redirect } from "next/navigation";
 
@@ -17,14 +17,14 @@ export default function EditJobTask({ params }: { params: { id: BigInteger } }) 
   const [loading, setLoading] = useState(true)
   const [cname, setCName] = useState<string | null>(null)
   const [resume, setResume] = useState<number>(0)
-  const [cuser, setCUser] = useState(null)
+  const [cuser, setCUser] = useState<User | null>(null)
   const [cl, setCl] = useState<number>(0)
-  const [clList, setCllist] = useState(null)
+  const [clList, setCllist] = useState<CLData[]>()
   const [searchStr, setSearchStr] = useState<string | null>(null)
   const [startTime, setStartTime] = useState<string | null>("2023-01-01 08:00:00")
-  const router = useRouter();
+  const router = useRouter(); 
   const supabase = createClientComponentClient<Database>();
-  const [rList, setRlist] = useState(null)
+  const [rList, setRlist] = useState<RData[]>();
   const [sendAsap, setSendAsap] = useState(false)
   // get job details
 

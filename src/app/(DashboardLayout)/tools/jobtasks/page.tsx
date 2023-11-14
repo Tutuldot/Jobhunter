@@ -1,11 +1,12 @@
 'use client';
 import Link from "next/link";
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react';
+import { Jobs } from '@/models/interfaces/JobTask';
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
 import BlankCard from '@/app/(DashboardLayout)/components/shared/BlankCard';
 import { Database } from "../../../../../types/supabase";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClientComponentClient, User } from "@supabase/auth-helpers-nextjs";
 import {
   Typography, Box,
   Table,
@@ -22,9 +23,9 @@ import {
 
 
 const JobTasks =  () => {
-    const [clList, setCllist] = useState(null)
+    const [clList, setCllist] = useState<Jobs[]>()
     const [loading, setLoading] = useState(true)
-    const [cuser, setCUser] = useState(null)
+    const [cuser, setCUser] = useState<User | null>()
     const supabase = createClientComponentClient<Database>();
 
     const getJobTasks = useCallback(async () => {
@@ -59,7 +60,7 @@ const JobTasks =  () => {
         getJobTasks()
       }, [getJobTasks])
 
-      async function deactivateJobs(id:BigInt) {
+      async function deactivateJobs(id:number) {
         try
         {
           setLoading(true)
@@ -90,7 +91,7 @@ const JobTasks =  () => {
   return (
     <PageContainer title="Job Tasks" description="This page is ">
       <DashboardCard title="Job Tasks">
-
+      <div>
       <Button component={Link} variant="contained" disableElevation color="primary"  target={""}   href={"/tools/jobtasks/add"}>
             Add New
           </Button>
@@ -178,7 +179,7 @@ const JobTasks =  () => {
 
                                 <TableCell align="right">
                                 <IconButton color="primary" aria-label="Delete"
-                                onClick={() => deactivateJobs( product.id.toString())}
+                                onClick={() => deactivateJobs( product.id)}
                                  >
                                      <IconTrash />
                                 </IconButton>
@@ -195,6 +196,8 @@ const JobTasks =  () => {
                     </TableBody>
                 </Table>
             </Box>
+        </div>
+     
       </DashboardCard>
     </PageContainer>
   );

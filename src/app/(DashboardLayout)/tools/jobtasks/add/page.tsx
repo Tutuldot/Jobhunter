@@ -3,8 +3,8 @@ import { Checkbox,TextField, MenuItem, Button, InputLabel, Select  } from '@mui/
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
 import { createClientComponentClient, Session, User } from '@supabase/auth-helpers-nextjs';
-import { Database } from '../../../../../../types/supabase';
-
+import { Database } from '@/app/(DashboardLayout)/components/types/supabase';
+import { CLData, RData } from '@/models/interfaces/JobTask';
 import { useState, useCallback, useEffect } from 'react'
 import { useRouter,redirect } from "next/navigation";
 
@@ -16,26 +16,10 @@ type ComboForm = {
   id: Number;
   name: string;
 }
-interface CLData {
-  coverletter: string | null;
-  created_at: string | null;
-  id: number;
-  modified_at: string | null;
-  name: string | null;
-  status: string | null;
-  user_id: string | null;
-}
 
 
-interface RData {
-  created_at: string | null;
-  file: string | null;
-  id: number;
-  isdeleted: boolean | null;
-  name: string | null;
-  path: string | null;
-  user_id: string | null;
-}
+
+
 export default function AddJobTask() {
   const [loading, setLoading] = useState(true)
   const [cname, setCName] = useState<string | null>(null)
