@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState, useMemo  } from 'react';
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
 import { Database } from "../../../../../types/supabase";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { User, createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import {
   Typography, Box,
   Table,
@@ -27,11 +27,28 @@ interface State extends SnackbarOrigin {
 
 }
 
+interface CLData {
+  coverletter: string | null;
+  created_at: string | null;
+  id: number;
+  modified_at: string | null;
+  name: string | null;
+  status: string | null;
+  user_id: string | null;
+}
+
+
+interface user_interface {
+  email: string | null;
+  id: number;
+  role: string | null;
+}
+
 export default function CoverLetter()  {
 
-    const [clList, setCllist] = useState(null)
+    const [clList, setCllist] = useState< CLData[]>()
     const [loading, setLoading] = useState(true)
-    const [cuser, setCUser] = useState(null)
+    const [cuser, setCUser] = useState<User>()
     const [idToRemove, setIDToRemove] = useState(0)
     const supabase = createClientComponentClient<Database>();
     const [messageText, setMessageText] = useState("")
@@ -100,7 +117,8 @@ export default function CoverLetter()  {
     
           if (data) {
             setCllist(data)
-            setCUser(user)
+            setCUser(user as User)
+            console.log(user)
           }
         } catch (error) {
           alert('Error loading user and coverletter data!')
@@ -236,7 +254,7 @@ export default function CoverLetter()  {
                                 </TableCell>
                                 <TableCell align="right">
                                 <IconButton color="primary" aria-label="Delete"
-                                onClick={() => deleteCoverLetterPrompt( product.id.toString())}
+                                onClick={() => deleteCoverLetterPrompt( product.id)}
                                  >
                                      <IconTrash />
                                 </IconButton>

@@ -2,7 +2,7 @@
 import { Checkbox,TextField, MenuItem, Button, InputLabel, Select  } from '@mui/material';
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
-import { createClientComponentClient, Session } from '@supabase/auth-helpers-nextjs';
+import { createClientComponentClient, Session, User } from '@supabase/auth-helpers-nextjs';
 import { Database } from '../../../../../../types/supabase';
 
 import { useState, useCallback, useEffect } from 'react'
@@ -16,12 +16,20 @@ type ComboForm = {
   id: Number;
   name: string;
 }
-
+interface CLData {
+  coverletter: string | null;
+  created_at: string | null;
+  id: number;
+  modified_at: string | null;
+  name: string | null;
+  status: string | null;
+  user_id: string | null;
+}
 export default function AddJobTask() {
   const [loading, setLoading] = useState(true)
   const [cname, setCName] = useState<string | null>(null)
   const [resume, setResume] = useState<number>(0)
-  const [cuser, setCUser] = useState(null)
+  const [cuser, setCUser] = useState<User>()
   const [sendAsap, setSendAsap] = useState(false)
   const [cl, setCl] = useState<number>(0)
   const [clList, setCllist] = useState<ComboForm[]>()
@@ -50,7 +58,7 @@ export default function AddJobTask() {
 
       if (data) {
         setCllist(data)
-        setCUser(user)
+        setCUser(user as User)
         console.log("cover letter")
         console.log(data)
       }
@@ -88,7 +96,7 @@ export default function AddJobTask() {
 
       if (data) {
         setRlist(data)
-        setCUser(user)
+        setCUser(user as User)
         console.log("resume")
         console.log(data)
       }

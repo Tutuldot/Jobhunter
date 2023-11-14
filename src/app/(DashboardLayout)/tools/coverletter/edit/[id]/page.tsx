@@ -3,12 +3,15 @@ import { TextField, Button, Snackbar,Chip } from '@mui/material';
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
 import { createClientComponentClient, Session } from '@supabase/auth-helpers-nextjs';
-import { Database } from '../../../../../../types/supabase';
+import { Database } from '@/app/(DashboardLayout)/components/types/supabase';
 import Editor from 'react-simple-wysiwyg';
 import { ToastFragment } from '../../components/CLComponents';
 import { useRouter,redirect } from "next/navigation";
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react';
+import { SnackbarOrigin } from '@mui/material';
+interface State extends SnackbarOrigin {
 
+}
 export default function AddCoverLetter({ params }: { params: { id: BigInteger } }) {
   const [html, setHtml] = useState('')
   const [cname, setCName] = useState<string | null>(null)
@@ -38,10 +41,12 @@ export default function AddCoverLetter({ params }: { params: { id: BigInteger } 
       if (error && status !== 406) {
         throw error
       }
-
+      var dd = "";
       if (data) {
-        setHtml(data.coverletter)
-        setCName(data.name)
+        
+        dd = data.coverletter || '';
+        setHtml(dd);
+        setCName(data.name);
    
       }
     } catch (error) {

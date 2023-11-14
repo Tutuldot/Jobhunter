@@ -2,9 +2,10 @@
 import { Typography, Grid, CardContent,TextField, FormControl, Button } from '@mui/material';
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
+
 import { useState, useCallback, useEffect,  } from 'react';
 import { Database } from '../../../../../types/supabase';
-import { createClientComponentClient, Session  } from "@supabase/auth-helpers-nextjs";
+import { createClientComponentClient, Session, User  } from "@supabase/auth-helpers-nextjs";
 import { UserDetails, Config, Values } from '@/models/interfaces/User';
 import { ConfigUserInfoForm, ConfigForm } from './component/ConfigForms';
 export default function JobConfig () {
@@ -16,7 +17,7 @@ export default function JobConfig () {
    SMTP_PORT_SSL: "Enter SSL Server "
 
   }
-  const [cuser, setCUser] = useState(null)
+  const [cuser, setCUser] = useState<User | null>(null)
   const [cuserinfo, setCuserinfo] = useState<UserDetails | null>(null)
   const [configValues, setConfigValues] = useState<Values>(payload)
   const [config, setConfig] = useState<Config>({
