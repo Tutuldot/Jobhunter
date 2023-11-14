@@ -25,6 +25,17 @@ interface CLData {
   status: string | null;
   user_id: string | null;
 }
+
+
+interface RData {
+  created_at: string | null;
+  file: string | null;
+  id: number;
+  isdeleted: boolean | null;
+  name: string | null;
+  path: string | null;
+  user_id: string | null;
+}
 export default function AddJobTask() {
   const [loading, setLoading] = useState(true)
   const [cname, setCName] = useState<string | null>(null)
@@ -32,12 +43,12 @@ export default function AddJobTask() {
   const [cuser, setCUser] = useState<User>()
   const [sendAsap, setSendAsap] = useState(false)
   const [cl, setCl] = useState<number>(0)
-  const [clList, setCllist] = useState<ComboForm[]>()
+  const [clList, setCllist] = useState<CLData[]>()
   const [searchStr, setSearchStr] = useState<string | null>(null)
   const [startTime, setStartTime] = useState<string | null>("2023-01-01 08:00:00")
   const router = useRouter();
   const supabase = createClientComponentClient<Database>();
-  const [rList, setRlist] = useState<ComboForm[]>()
+  const [rList, setRlist] = useState<RData[]>()
   const getCoverletter = useCallback(async () => {
     try {
       setLoading(true)
@@ -46,10 +57,10 @@ export default function AddJobTask() {
       } = await supabase.auth.getUser()
       let { data, error, status } = await supabase
         .from('coverletter')
-        .select('id,name')
+        .select()
         .eq('user_id', user?.id)
         .eq('status','Active')
-        .returns<ComboForm>()
+      //  .returns<CLData>()
 
 
       if (error && status !== 406) {
@@ -84,10 +95,10 @@ export default function AddJobTask() {
       } = await supabase.auth.getUser()
       let { data, error, status } = await supabase
         .from('resume')
-        .select('id, name')
+        .select()
         .eq('user_id', user?.id)
         .is('isdeleted',null)
-        .returns<ComboForm>()
+       // .returns<ComboForm>()
 
 
       if (error && status !== 406) {

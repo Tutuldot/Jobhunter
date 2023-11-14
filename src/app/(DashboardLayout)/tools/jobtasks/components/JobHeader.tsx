@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from "next/link";
+import { JobDetailsData, jdetails_interface } from '@/models/interfaces/JobTask';
 import {
     Typography, Box,
     Table,
@@ -57,7 +58,7 @@ const JobHeader: React.FC<ComponentProps> = ({clList, deactivateJobs}) => {
               <TableBody>
                  
 
-                  {clList?.map((product) => (
+                  {clList?.map((product:jdetails_interface) => (
                       <TableRow key={product.id}>
                          
                           <TableCell>

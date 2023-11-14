@@ -1,23 +1,69 @@
 'use client';
 import Link from "next/link";
-
+type Json =
+| string
+| number
+| boolean
+| null
+| { [key: string]: Json | undefined }
+| Json[]
 import { paginate } from "@/utils/helpers";
 import { useCallback, useEffect, useState } from 'react';
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
 import Pagination from '@mui/material/Pagination';
-import { Database } from "../../../../../types/supabase";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { Database } from "@/app/(DashboardLayout)/components/types/supabase";
+import { createClientComponentClient, User } from "@supabase/auth-helpers-nextjs";
 import JobHeader from "../../components/JobHeader";
 import JobsModal from "../../components/JobsModal";
 import JobDetails from "../../components/JobDetails";
 import { JobDetailsData } from "@/models/interfaces/JobTask";
 
+interface jdetails_interface {
+  id: number;
+  created_at: string | null;
+  modified_at: string | null;
+  generatedCoverLetter: string | null;
+  status: string | null;
+  job_header: number | null;
+  job_id: number | null;
+  jobs_masterlist: {
+    created_at: string | null;
+    details: Json | null;
+    details_version: string | null;
+    id: number;
+    jobid: string | null;
+    jobname: string | null;
+    jobverified: boolean | null;
+    source: string | null;
+    source_site: string | null;
+    tags: string | null;
+    url: string | null;
+  }[] | null;
+  jobs: {
+    appliedJobCount: number | null;
+    coverletter_id: number | null;
+    created_at: string | null;
+    email_sending_schedule: string | null;
+    id: number;
+    jobCount: number | null;
+    keyword: string | null;
+    modified_at: string | null;
+    name: string;
+    resume_id: number | null;
+    search_texts: Json | null;
+    send_asap: boolean | null;
+    setup_id: number | null;
+    status: string | null;
+    user_id: string | null;
+  } | null;
+};
+
   export default function JobTasksView  ({ params }: { params: { id: BigInteger } })  {
     const [clList, setCllist] = useState(null)
     const [loading, setLoading] = useState(true)
     const [cuser, setCUser] = useState(null)
-    const [jdetails, setJDetails] = useState(null)
+    const [jdetails, setJDetails] = useState<jdetails_interface[]>()
     const [jdlines, setJDLines] = useState(null)
     const [pageCount, setPageCount] = useState(0)
     const [dataCount, setDataCount] = useState(0)
@@ -145,7 +191,7 @@ import { JobDetailsData } from "@/models/interfaces/JobTask";
 
      
 
-      const handleChange = (event, value) => {
+      const handleChange = (event, value:number) => {
         setCurrentPage(value)
         getJobTasksDetails(value)
       };
@@ -189,20 +235,19 @@ import { JobDetailsData } from "@/models/interfaces/JobTask";
   return (
     <PageContainer title="Job Tasks" description="This page is ">
         <JobsModal  open={open} onClose={handleClose} style = {style} jobinfo={jobinfo} />
-        
-      -  <DashboardCard title="Job Tasks">
+        <DashboardCard title="Job Tasks">
             <JobHeader clList={clList} deactivateJobs={deactivateJobs} />
-     
-
         </DashboardCard>
 
 <br/><br/>
 
 
     <DashboardCard title="Job Items">
-
-        <Pagination count={pageCount} defaultPage={1} siblingCount={0} boundaryCount={2} onChange={handleChange} />
-        <JobDetails jdlines={jdlines} setupModal={setupModal} deactivateJobs={deactivateJobs} />
+        <div>
+          <Pagination count={pageCount} defaultPage={1} siblingCount={0} boundaryCount={2} onChange={handleChange} />
+          <JobDetails jdlines={jdlines} setupModal={setupModal} deactivateJobs={deactivateJobs} />
+        </div>
+       
 
     </DashboardCard>
       

@@ -3,7 +3,7 @@ import { Checkbox,TextField, MenuItem, Button, InputLabel, Select  } from '@mui/
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
 import { createClientComponentClient, Session } from '@supabase/auth-helpers-nextjs';
-import { Database } from '../../../../../../types/supabase';
+import { Database } from '@/app/(DashboardLayout)/components/types/supabase';
 
 import { useState, useCallback, useEffect } from 'react'
 import { useRouter,redirect } from "next/navigation";
@@ -48,11 +48,11 @@ export default function EditJobTask({ params }: { params: { id: BigInteger } }) 
       if (data) {
         
         setCName(data.name)
-        setResume(data.resume_id)
-        setCl(data.coverletter_id)
+        setResume(data.resume_id == null ? 0 : data.resume_id )
+        setCl(data.coverletter_id == null ? 0 : data.coverletter_id)
         setStartTime(data.email_sending_schedule)
         setSearchStr(data.keyword)
-        setSendAsap(data.send_asap)
+        setSendAsap(data.send_asap == null ? false : data.send_asap)
         console.log(data.email_sending_schedule)
       }
     } catch (error) {

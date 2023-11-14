@@ -11,7 +11,7 @@ import {
     Chip,Grid, CardContent,Button, IconButton, 
   } from '@mui/material';
 import Modal from '@mui/material/Modal';
-import { Database } from '../../../../../../types/supabase';
+import { Database } from '@/app/(DashboardLayout)/components/types/supabase';
 
 interface ComponentProps {
   open: boolean;
@@ -48,7 +48,7 @@ const JobsModal: React.FC<ComponentProps> = ({ open, onClose, jobinfo, style }) 
         <b>Work Experience: </b> {jobinfo.qualification}
         <br/>
         <b>Source: </b> {jobinfo.Source} <br/>
-        <b>Link: </b> <Link href={jobinfo.Source_Site + jobinfo.url.substring(1)}  target="_blank">Click here to view on Job Bank</Link>
+        <b>Link: </b> <Link href={jobinfo.Source_Site + (jobinfo.url !== null ? jobinfo.url.substring(1) : '') }  target="_blank">Click here to view on Job Bank</Link>
         <br/><br/>
         <b>Responsibilities:</b><br/>
         {jobinfo.responsibilities}

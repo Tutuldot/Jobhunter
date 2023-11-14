@@ -1,6 +1,13 @@
 import React from 'react';
 import Link from "next/link";
-import { JobDetailsData } from '@/models/interfaces/JobTask';
+type Json =
+| string
+| number
+| boolean
+| null
+| { [key: string]: Json | undefined }
+| Json[]
+import { JobDetailsData, jdetails_interface } from '@/models/interfaces/JobTask';
 import {
     Typography, Box,
     Table,
@@ -61,7 +68,7 @@ interface ComponentProps {
               <TableBody>
                  
 
-                  {jdlines?.map((product) => (
+                  {jdlines?.map((product:jdetails_interface) => (
                       <TableRow key={product.id}>
                          
                           <TableCell>
