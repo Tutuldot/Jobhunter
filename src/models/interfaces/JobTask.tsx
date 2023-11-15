@@ -123,4 +123,29 @@ export interface Jobs {
   setup_id: number | null;
   status: string | null;
   user_id: string | null;
+  jobdetails?: {
+    count: number;
+  }[];
+}
+
+
+export interface JobV2 {
+  id: number;
+  created_at: string;
+  modified_at: string;
+  name: string;
+  email_sending_schedule: string;
+  resume_id: number;
+  coverletter_id: number;
+  setup_id: number | null;
+  keyword: string;
+  search_texts: string | null;
+  status: string;
+  jobCount: number;
+  appliedJobCount: number;
+  user_id: string;
+  send_asap: boolean;
+  jobdetails: {
+    count: number;
+  }[];
 }

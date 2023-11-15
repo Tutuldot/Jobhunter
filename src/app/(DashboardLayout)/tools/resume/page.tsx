@@ -2,7 +2,7 @@
 import { saveAs } from 'file-saver';
 import { DialogYesNo } from "@/app/(DashboardLayout)/components/shared/CLComponents";
 import { SnackbarOrigin } from '@mui/material';
-
+import { RData } from "@/models/interfaces/JobTask";
 interface State extends SnackbarOrigin {
 
 }
@@ -12,7 +12,7 @@ import PageContainer from '@/app/(DashboardLayout)/components/container/PageCont
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
 import BlankCard from '@/app/(DashboardLayout)/components/shared/BlankCard';
 import { Database } from "../../../../../types/supabase";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { createClientComponentClient, User } from "@supabase/auth-helpers-nextjs";
 import {
   Typography, Box,
   Table,
@@ -29,9 +29,9 @@ import {
 
  
   export default function  Resume() {
-    const [clList, setCllist] = useState(null)
+    const [clList, setCllist] = useState<RData[]>()
     const [loading, setLoading] = useState(true)
-    const [cuser, setCUser] = useState(null)
+    const [cuser, setCUser] = useState<User | null>()
     const supabase = createClientComponentClient<Database>();
     const [idToRemove, setIDToRemove] = useState(0)
     const [open, setOpen] = useState(false);
@@ -125,7 +125,7 @@ import {
           .from('files')
           .download(file)
           console.log('file downloaded')
-          saveAs(data, file)
+          //saveAs(data, file)
           console.log('prompt')
           
         }catch (error) {
@@ -167,7 +167,8 @@ import {
   return (
     <PageContainer title="Resume" description="List of resume">
       <DashboardCard title="Resume">
-      <Snackbar
+        <div>
+        <Snackbar
             open={snackOpen}
             autoHideDuration={6000}
             onClose={handleCloseSnack}
@@ -228,13 +229,13 @@ import {
                               
                                 <TableCell align="right">
                                 <IconButton color="primary" aria-label="Delete"
-                                onClick={() => deleteResumePrompt( product.id.toString())}
+                                onClick={() => deleteResumePrompt( product.id)}
                                  >
                                      <IconTrash />
                                 </IconButton>
 
                                 <IconButton color="primary" aria-label="Download"
-                                onClick={() => downloadResume( product.file.toString())}
+                                onClick={() => downloadResume( product.file == null ? "" : product.file.toString())}
                                  >
                                      <IconDownload />
                                 </IconButton>
@@ -249,6 +250,8 @@ import {
             <DialogYesNo open={open} handleClose={handleClose} 
             handleAgree={handleAgree} header="Delete Cover Letter" message="Are you sure you want to delete this resume?"  />
 
+        </div>
+      
 
       </DashboardCard>
     </PageContainer>

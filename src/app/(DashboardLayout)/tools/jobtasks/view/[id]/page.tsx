@@ -17,7 +17,7 @@ import { createClientComponentClient, User } from "@supabase/auth-helpers-nextjs
 import JobHeader from "../../components/JobHeader";
 import JobsModal from "../../components/JobsModal";
 import JobDetails from "../../components/JobDetails";
-import { JobDetailsData } from "@/models/interfaces/JobTask";
+import { JobDetailsData, Jobs } from "@/models/interfaces/JobTask";
 
 interface jdetails_interface {
   id: number;
@@ -60,11 +60,11 @@ interface jdetails_interface {
 };
 
   export default function JobTasksView  ({ params }: { params: { id: BigInteger } })  {
-    const [clList, setCllist] = useState(null)
+    const [clList, setCllist] = useState<Jobs[]>()
     const [loading, setLoading] = useState(true)
-    const [cuser, setCUser] = useState(null)
+    const [cuser, setCUser] = useState<User | null>()
     const [jdetails, setJDetails] = useState<jdetails_interface[]>()
-    const [jdlines, setJDLines] = useState(null)
+    const [jdlines, setJDLines] = useState<jdetails_interface[]>()
     const [pageCount, setPageCount] = useState(0)
     const [dataCount, setDataCount] = useState(0)
     const [currentPage, setCurrentPage] = useState(1)
@@ -113,18 +113,18 @@ interface jdetails_interface {
             .select('*,jobdetails(count)')
             .eq('user_id', user?.id)
             .eq('id',params.id)
-
+            .returns<Jobs[]>()
           if (error && status !== 406) {
             throw error
           }
-          console.log("to check")
-         
+          console.log("to check");
+          console.log(data);
           if (data) {
             setCllist(data)
             setCUser(user)
            
             data?.map((p) => {
-                var itemCount = p.jobdetails[0].count
+                var itemCount = p.jobdetails == null ? 0 : p.jobdetails[0].count
                 var res = paginate(itemCount,1, itemsPerPage,10)
 
                 setPageCount(res.totalPages)
@@ -162,7 +162,7 @@ interface jdetails_interface {
             .eq('jobs.user_id', user?.id)
             .eq('jobs.id',params.id)
             .range(startPage,endPage)
-
+            .returns<jdetails_interface[]>()
     
           if (error && status !== 406) {
             throw error
@@ -191,7 +191,8 @@ interface jdetails_interface {
 
      
 
-      const handleChange = (event, value:number) => {
+      const handleChange = (event: any, value:number) => {
+        console.log(event)
         setCurrentPage(value)
         getJobTasksDetails(value)
       };
