@@ -1,3 +1,4 @@
+/* eslint-disable */
 'use client';
 import { saveAs } from 'file-saver';
 import { DialogYesNo } from "@/app/(DashboardLayout)/components/shared/CLComponents";
@@ -125,7 +126,10 @@ import {
           .from('files')
           .download(file)
           console.log('file downloaded')
-          //saveAs(data, file)
+          if (data instanceof Blob) {
+            saveAs(data, file)
+          } 
+          
           console.log('prompt')
           
         }catch (error) {
