@@ -2,13 +2,22 @@
 import { Typography, Grid, CardContent,TextField, FormControl, Button } from '@mui/material';
 import PageContainer from '@/app/(DashboardLayout)/components/container/PageContainer';
 import DashboardCard from '@/app/(DashboardLayout)/components/shared/DashboardCard';
+import { SnackbarOrigin, Snackbar } from '@mui/material';
+interface State extends SnackbarOrigin {
 
+}
 import { useState, useCallback, useEffect,  } from 'react';
-import { Database } from '../../../../../types/supabase';
+import { Database } from '@/app/(DashboardLayout)/components/types/supabase';
 import { createClientComponentClient, Session, User  } from "@supabase/auth-helpers-nextjs";
 import { UserDetails, Config, Values } from '@/models/interfaces/User';
 import { ConfigUserInfoForm, ConfigForm } from './component/ConfigForms';
 export default function JobConfig () {
+  const [state, setState] = useState<State>({
+
+    vertical: 'top',
+    horizontal: 'center',
+  });
+  const { vertical, horizontal } = state;
   const payload = {
    SMTP_SERVER: "Enter Server Name",
    SMTP_USERNAME: "Enter Username",
@@ -17,9 +26,11 @@ export default function JobConfig () {
    SMTP_PORT_SSL: "Enter SSL Server "
 
   }
+  const [snackOpen, setSnackOpen] = useState(false);
   const [cuser, setCUser] = useState<User | null>(null)
   const [cuserinfo, setCuserinfo] = useState<UserDetails | null>(null)
   const [configValues, setConfigValues] = useState<Values>(payload)
+  const [messageText, setMessageText] = useState("")
   const [config, setConfig] = useState<Config>({
     id: 0,
     user_id: "",
@@ -63,10 +74,59 @@ export default function JobConfig () {
       }));
     };
 
-    const handleSubmit = (e:any) => {
+    async function handleSubmitUser (e:any)  {
       e.preventDefault();
       // You can do something with the config data here, like sending it to the server
-      console.log(config);
+      console.log("user");
+      console.log(usrform);
+     
+      const { error } = await supabase
+        .from('users')
+        .update(usrform)
+        .eq('user_id', cuser?.id)
+      if(!error){
+        setMessageText("User Details Updated!")
+        setSnackOpen(true)
+      }
+      console.log(error);
+      
+    };
+
+    async function handleSubmitSMTP (e:any) {
+      e.preventDefault();
+      // You can do something with the config data here, like sending it to the server
+      console.log("smtp");
+      console.log(configValues);
+      const { error } = await supabase
+        .from('config')
+        .update({values:{
+          SMTP_SERVER: configValues.SMTP_SERVER,
+          SMTP_USERNAME: configValues.SMTP_USERNAME,
+          SMTP_PASSWORD: configValues.SMTP_PASSWORD,
+          SMTP_PORT_TLS: configValues.SMTP_PORT_TLS,
+          SMTP_PORT_SSL: configValues.SMTP_PORT_SSL
+       
+         } })
+        .eq('user_id', cuser?.id)
+      if(!error){
+        setMessageText("Email Configuration Updated.")
+        setSnackOpen(true)
+      }
+      console.log(error);
+    };
+
+    const handleCloseSnack = (event: React.SyntheticEvent | Event, reason?: string) => {
+
+      console.log("reason: " + reason);
+      /**
+      if (reason === 'clickaway') {
+        setSnackOpen(false);
+        return;
+      }else{
+        router.replace("/tools/coverletter");
+      }
+      */
+      setSnackOpen(false);
     };
 
    
@@ -125,7 +185,8 @@ export default function JobConfig () {
          
 
       } catch (error) {
-      alert('Error loading user and config data!')
+        setMessageText("Error on loading data. Please try again later.")
+        setSnackOpen(true)
       } finally {
          // remove loading page here
       }
@@ -137,15 +198,26 @@ export default function JobConfig () {
 
   return (
     <PageContainer title="User Configuration" description="">
-       <DashboardCard title="User Info">
-        <ConfigUserInfoForm handleChange={handleChangeUserInfo} usrform={usrform} handleSubmit={handleSubmit} />
-       
-      </DashboardCard>
-      <br/><br/><br/>
-      <DashboardCard title="SMTP Setup">
+      <div>
+        <Snackbar
+              open={snackOpen}
+              autoHideDuration={6000}
+              onClose={handleCloseSnack}
+              message={messageText}
+            
+              anchorOrigin={{ vertical, horizontal }}
+            />
+        <DashboardCard title="User Info">
+          
+          <ConfigUserInfoForm handleChange={handleChangeUserInfo} usrform={usrform} handleSubmit={handleSubmitUser} />
         
-        <ConfigForm  handleChange={handleChangeConfig} configValues={configValues} handleSubmit={handleSubmit}/>
-      </DashboardCard>
+        </DashboardCard>
+        <br/><br/><br/>
+        <DashboardCard title="SMTP Setup">
+          
+          <ConfigForm  handleChange={handleChangeConfig} configValues={configValues} handleSubmit={handleSubmitSMTP}/>
+        </DashboardCard>
+      </div>
     
     </PageContainer>
   );
