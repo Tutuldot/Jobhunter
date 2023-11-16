@@ -175,6 +175,7 @@ export default function JobConfig () {
          .from('config')
          .select('*')
          .eq('user_id', user?.id)
+         .eq('name','SETUP')
          .limit(1)
          .single()
 
