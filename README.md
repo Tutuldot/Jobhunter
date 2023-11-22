@@ -34,6 +34,18 @@ replace prdanvztefttoqaqozob with your own project id
 
 Then Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+sample app can be found here https://jobhunter-theta.vercel.app/
 
+Status:
+
+Data Scraper: In-Progress
+
+  Data scraper can be found at https://github.com/Tutuldot/JobSpider. Currently can handle scraping jobbank.gc.ca and Seek Web sites of AU and NZ
+
+AI Cover Letter Generator: In-Progress
+  Soon the link will be uploaded. Still in-progress. I use Llama 2 for this functionality
+
+Current Resume Job Matching: In-Progress
+  This is NLP job which will give score to the job posting that is relevant to the skills of the candidate
 
 By esthony
